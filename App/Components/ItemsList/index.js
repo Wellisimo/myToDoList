@@ -2,33 +2,43 @@ import React from 'react';
 import { StyleSheet, View, FlatList, Text } from 'react-native';
 import {connect} from 'react-redux';
 
-import ItemListText from '../ItemsListText';
+import ItemsListText from '../ItemsListText';
+
+import globalStylesWhite from '../../Styles/Light';
+import globalStylesDark from '../../Styles/Dark';
 
 const itemsList = (props) => {
-    return (
-        <View style={styles.listContainer}>
-          <FlatList
-            keyExtractor={(item, index) => index.toString()}
-            style={styles.list}
-            ItemSeparatorComponent={() => <View style={styles.listSeparator}/>}
-            data={props.items}
-            renderItem={({item}) => {
-              return (
-                <View style={styles.listItem}>
-                  <Text>- </Text>
-                  <ItemListText 
-                    item={item}
-                  />
-                </View>
-              )
-            }}
-          />
-        </View>
-    )
+  const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
+
+  return (
+      <View style={[styles.listContainer, globalStyles.background]}>
+        <FlatList
+          keyExtractor={(item, index) => index.toString()}
+          style={styles.list}
+          ItemSeparatorComponent={() => <View style={[{borderBottomColor: props.style ? 'black' : 'white'}, styles.listSeparator]}/>}
+          data={props.items}
+          renderItem={({item}) => {
+            return (
+              <View style={styles.listItem}>
+                <Text>- </Text>
+                <ItemsListText 
+                  item={item}
+                  callBack={props.callBack}
+                />
+              </View>
+            )
+          }}
+        />
+      </View>
+  )
 }
 
 const mapStateToProps = (state) => {
-    return {items: state.items};
+    return {
+      items: state.items,
+      history: state.history,
+      style: state.style,
+    };
 };
 
 export default connect(mapStateToProps)(itemsList);
@@ -52,7 +62,6 @@ const styles = StyleSheet.create({
   },
   listSeparator: {
     width: '95%',
-    borderBottomColor: 'black',
     borderBottomWidth: 1,
   },
 });

@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CommonActions } from '@react-navigation/native';
 import {connect} from 'react-redux';
 
 import styles from './styles';
 
 import {UserNotFound} from '../../Errors';
-import {showError} from '../../redux/actions/index';
+import {showError, login} from '../../redux/actions/index';
 
 const URL = 'https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app';
 
@@ -41,18 +40,12 @@ const loginScreen = (props) => {
             await AsyncStorage.setItem('isLogged', jsonValue)
             setLogin('');
             setPassword('');
-            props.navigation.dispatch(
-                CommonActions.reset({
-                    index: 0,
-                    routes: [
-                        { name: 'BottomTabWithHeader' },
-                    ],
-                })
-            );
+            props.login();
+            // props.navigation.navigate('BottomTabWithHeader');
         } else {
             setLogin('');
             setPassword('');
-            // props.showError('Login or password is incorrect')
+            props.showError('Login or password is incorrect')
         }
     }
     
@@ -84,4 +77,4 @@ const loginScreen = (props) => {
     )
 };
 
-export default connect(null, {showError: showError})(loginScreen);
+export default connect(null, {showError: showError, login: login})(loginScreen);

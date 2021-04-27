@@ -10,13 +10,16 @@ import Input from '../../Components/Input';
 import {interaction} from '../../redux/actions/index';
 
 import styles from './styles';
-import globalStyles from '../../Styles';
+import globalStylesWhite from '../../Styles/Light';
+import globalStylesDark from '../../Styles/Dark';
 
 const userInfoScreen = (props) => {
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
     const [image, setImage] = useState(null);
     const [editable, setEditable] = useState(false);
+
+    const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
 
     useEffect(() => {
         (async () => {
@@ -53,12 +56,13 @@ const userInfoScreen = (props) => {
     }
     
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, globalStyles.background]}>
             <Text style={[styles.text, globalStyles.mainText]}>User Info</Text>
             <TouchableOpacity 
                 onPress={() => {
                     editable ? pickImage : null
-                    props.interaction('Image')
+                    // props.interaction('Image')
+                    props.route.params.callBack('Image');
                 }}
             >
                 <Image
@@ -100,7 +104,8 @@ const userInfoScreen = (props) => {
                         })
                         AsyncStorage.setItem('userInfo', jsonValue)
                     }
-                    props.interaction(`${!editable ? 'Edit' : 'Save'} button`)
+                    // props.interaction(`${!editable ? 'Edit' : 'Save'} button`)
+                    props.route.params.callBack(`${!editable ? 'Edit' : 'Save'} button`);
                     setEditable(!editable)
                 }}
             />
@@ -108,4 +113,10 @@ const userInfoScreen = (props) => {
     )
 }
 
-export default connect(null, {interaction: interaction})(userInfoScreen);
+const mapStateToProps = (state) => {
+    return {
+      style: state.style,
+    };
+};
+
+export default connect(mapStateToProps, {interaction: interaction})(userInfoScreen);

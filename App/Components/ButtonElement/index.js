@@ -1,10 +1,14 @@
 
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {connect} from 'react-redux';
 
-import globalStyles from '../../Styles';
+import globalStylesWhite from '../../Styles/Light';
+import globalStylesDark from '../../Styles/Dark';
 
 const buttonElement = (props) => {
+  const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
+
     return (
         <TouchableOpacity
           style={[styles.buttonContainer, globalStyles.buttonContainer]}
@@ -19,7 +23,13 @@ const buttonElement = (props) => {
     )
 }
 
-export default buttonElement;
+const mapStateToProps = (state) => {
+    return {
+      style: state.style,
+    };
+};
+
+export default connect(mapStateToProps)(buttonElement);
 
 const styles = StyleSheet.create({
   buttonContainer: {
@@ -29,7 +39,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'black',
     borderRadius: 10,
   }
 });

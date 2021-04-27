@@ -7,6 +7,13 @@ export const addItem = (item) => {
     };
 };
 
+export const updateItem = (oldValue, newValue) => {
+    return {
+        type: 'UPDATE_ITEM',
+        payload: {oldValue: oldValue, newValue: newValue}
+    };
+};
+
 export const markItem = (value) => {
     return {
         type: 'MARK_ITEM',
@@ -18,6 +25,20 @@ export const deleteItem = (value) => {
     return {
         type: 'DELETE_ITEM',
         payload: value
+    };
+};
+
+export const addHistory = (items) => {
+    return {
+        type: 'ADD_HISTORY',
+        payload: items
+    };
+};
+
+export const undoItems = (data) => {
+    return {
+        type: 'UNDO_ITEMS',
+        payload: data
     };
 };
 
@@ -68,5 +89,60 @@ export const interaction = (item) => {
     return {
         type: 'PRESSED_ITEM',
         payload: item
+    };
+};
+
+export const login = () => {
+    return async (dispatch) => {
+        const jsonValue = JSON.stringify(true);
+        await AsyncStorage.setItem('isLogged', jsonValue);
+        const result = await AsyncStorage.getItem('isLogged');
+        dispatch({type: 'LOGIN_CHECK', payload: JSON.parse(result)});
+    };
+};
+
+export const logout = () => {
+    return async (dispatch) => {
+        const jsonValue = JSON.stringify(false);
+        await AsyncStorage.setItem('isLogged', jsonValue);
+        const result = await AsyncStorage.getItem('isLogged');
+        dispatch({type: 'LOGIN_CHECK', payload: JSON.parse(result)});
+    };
+};
+
+export const checkLogin = () => {
+    return async (dispatch) => {
+        const value = await AsyncStorage.getItem('isLogged');
+        if (value !== null) {
+            dispatch({type: 'LOGIN_CHECK', payload: JSON.parse(value)});
+        }
+    };
+};
+
+export const changeStyle = () => {
+    return async (dispatch) => {
+        const jsonResult = await AsyncStorage.getItem('style');
+        const result = jsonResult ? JSON.parse(jsonResult) : null;
+        if (result === null) {
+            const jsonValue = JSON.stringify(true);
+            await AsyncStorage.setItem('style', jsonValue)
+            dispatch({type: 'STYLE_CHANGE', payload: true});
+        } else {
+            dispatch({type: 'STYLE_CHANGE', payload: !result});
+            const jsonValue = JSON.stringify(!result);
+            await AsyncStorage.setItem('style', jsonValue)
+        }
+    };
+};
+
+export const getStyle = () => {
+    return async (dispatch) => {
+        const jsonResult = await AsyncStorage.getItem('style');
+        const result = jsonResult ? JSON.parse(jsonResult) : null;
+        if (result === null) {
+            dispatch({type: 'STYLE_GET', payload: true});
+        } else {
+            dispatch({type: 'STYLE_GET', payload: result});
+        }
     };
 };

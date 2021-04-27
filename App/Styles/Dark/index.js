@@ -2,27 +2,31 @@ import { StyleSheet } from 'react-native';
 
 export default globalStyles = StyleSheet.create({
     background: {
-        backgroundColor: '#ffffff',
+        backgroundColor: 'black',
     },
     navigationHeader: {
-        backgroundColor: '#ccc6c6',
+        backgroundColor: 'black',
     },
     buttonContainer: {
-        backgroundColor: '#e1f5f4',
+        backgroundColor: 'black',
+        borderColor: 'white',
+    },
+    tabBarOptions: {
+        backgroundColor: '#878787',
     },
     buttonText: {
         fontSize: 18,
         fontWeight: '500',
-        color: 'black',
+        color: 'white',
     },
     mainText: {
         fontSize: 16,
         fontWeight: '500',
-        color: 'black',
+        color: 'white',
     },
     supportText: {
-        fontSize: 11,
+        fontSize: 9,
         fontWeight: '200',
-        color: 'black',
+        color: 'white',
     },
 });

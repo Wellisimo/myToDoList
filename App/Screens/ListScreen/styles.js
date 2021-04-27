@@ -6,12 +6,10 @@ export default styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingTop: 15,
-    paddingBottom: '45%',
+    paddingBottom: '40%',
     width: '100%',
     height: '100%',
-    borderBottomColor: 'black',
     borderTopColor: 'black',
-    borderBottomWidth: 1,
     borderTopWidth: 1,
   },
   tips: {

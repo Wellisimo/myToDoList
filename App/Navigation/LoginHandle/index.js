@@ -8,6 +8,52 @@ import RegisterScreen from '../../Screens/RegisterScreen';
 
 const Stack = createStackNavigator();
 
+export default loginHandle = () => {
+  return (
+      <Stack.Navigator 
+        initialRouteName="Welcome"
+      >
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{
+            headerShown: false,
+            transitionSpec: {
+              open: config,
+              close: config,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{
+            headerShown: false,
+            transitionSpec: {
+              open: config,
+              close: config,
+            },
+            cardStyleInterpolator: forSlide,
+            gestureDirection: 'horizontal-inverted',
+          }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{
+            headerShown: false,
+            transitionSpec: {
+              open: config,
+              close: config,
+            },
+            cardStyleInterpolator: forSlide,
+            gestureDirection: 'horizontal',
+          }}
+        />
+      </Stack.Navigator>
+  )
+}
+
 const config = {
   animation: 'spring',
   config: {
@@ -57,49 +103,3 @@ const forSlide = ({ current, next, inverted, layouts: { screen } }) => {
     },
   };
 };
-
-export default loginHandle = () => {
-  return (
-      <Stack.Navigator 
-        initialRouteName="Welcome"
-      >
-        <Stack.Screen
-          name="Welcome"
-          component={WelcomeScreen}
-          options={{
-            headerShown: false,
-            transitionSpec: {
-              open: config,
-              close: config,
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{
-            headerShown: false,
-            transitionSpec: {
-              open: config,
-              close: config,
-            },
-            cardStyleInterpolator: forSlide,
-            gestureDirection: 'horizontal-inverted',
-          }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={{
-            headerShown: false,
-            transitionSpec: {
-              open: config,
-              close: config,
-            },
-            cardStyleInterpolator: forSlide,
-            gestureDirection: 'horizontal',
-          }}
-        />
-      </Stack.Navigator>
-  )
-}

@@ -4,7 +4,7 @@ import {Text, View, Modal, TouchableOpacity} from "react-native";
 import {connect} from 'react-redux';
 import {showError} from '../../redux/actions/index';
 
-import globalStyles from '../../Styles';
+import globalStyles from '../../Styles/Light';
 
 const modalError = (props) => {
     return (

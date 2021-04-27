@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default class GetStore {
+class GetStore {
     store = [];
 
     loadStore = async function () {
@@ -18,3 +18,11 @@ export default class GetStore {
         return myData[key]
     }
 }
+
+export default (async () => {
+        let store = new GetStore;
+        await store.loadStore();
+        let status = store.getStatus('isLogged');
+        return status
+    }
+)()

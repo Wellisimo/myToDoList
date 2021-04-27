@@ -1,7 +1,13 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
+import {connect} from 'react-redux';
+
+import globalStylesWhite from '../../Styles/Light';
+import globalStylesDark from '../../Styles/Dark';
 
 const input = (props) => {
+  const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
+
     return (
         <View style={styles.textContainer}>
             <TextInput
@@ -15,7 +21,13 @@ const input = (props) => {
     )
 }
 
-export default input;
+const mapStateToProps = (state) => {
+    return {
+      style: state.style,
+    };
+};
+
+export default connect(mapStateToProps)(input);
 
 const styles = StyleSheet.create({
   textInput: {
@@ -32,5 +44,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 45,
     width: '95%',
+    backgroundColor: 'white',
   },
 });
