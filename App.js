@@ -1,8 +1,8 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Root } from "native-base";
-import {Provider} from 'react-redux';
-import {createStore, applyMiddleware} from 'redux';
+import { Root } from 'native-base';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
 import StackMain from './App/Navigation/StackMain';
@@ -18,5 +18,5 @@ export default function App() {
         <StackMain />
       </Root>
     </Provider>
-  )
+  );
 }

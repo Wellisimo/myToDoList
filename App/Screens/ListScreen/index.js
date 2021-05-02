@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import ButtonElement from '../../Components/ButtonElement';
 import ItemsList from '../../Components/ItemsList';
 import Input from '../../Components/Input';
 
-import {addItem, loadItems, downloadItems, saveItems, uploadItems, addHistory, undoItems, showError, interaction, getStyle} from '../../redux/actions/index';
+import {
+  addItem, loadItems, downloadItems, saveItems, uploadItems, addHistory, undoItems, showError, interaction, getStyle,
+} from '../../redux/actions/index';
 
 import styles from './styles';
 import globalStylesWhite from '../../Styles/Light';
@@ -18,17 +20,17 @@ const listScreen = (props) => {
 
   const textInputHandler = (text) => {
     setText(text);
-  }
+  };
 
-  useEffect(() => {props.getStyle()}, []);
+  useEffect(() => { props.getStyle(); }, []);
 
   return (
     <View style={[styles.container, globalStyles.background]}>
       <Input
         text={text}
         textInputHandler={textInputHandler}
-        placeholder='type here to add item'
-        onFocus ={() => {
+        placeholder="type here to add item"
+        onFocus={() => {
           // props.interaction('input');
           props.route.params.callBack('input');
         }}
@@ -50,7 +52,7 @@ const listScreen = (props) => {
           }}
         />
         <ButtonElement
-          title={"Undo"}
+          title="Undo"
           onPress={() => {
             props.undoItems(props.history);
             // props.interaction('Save button');
@@ -60,7 +62,7 @@ const listScreen = (props) => {
       </View>
       <View style={styles.buttonsContainer}>
         <ButtonElement
-          title={"Save"}
+          title="Save"
           onPress={() => {
             props.saveItems(props.items);
             // props.interaction('Save button');
@@ -68,7 +70,7 @@ const listScreen = (props) => {
           }}
         />
         <ButtonElement
-          title={"Load"}
+          title="Load"
           onPress={() => {
             props.loadItems();
             props.addHistory(props.items);
@@ -79,7 +81,7 @@ const listScreen = (props) => {
       </View>
       <View style={styles.buttonsContainer}>
         <ButtonElement
-          title={"Upload"}
+          title="Upload"
           onPress={() => {
             props.uploadItems(props.items);
             // props.interaction('Upload button')
@@ -87,7 +89,7 @@ const listScreen = (props) => {
           }}
         />
         <ButtonElement
-          title={"Download"}
+          title="Download"
           onPress={() => {
             props.downloadItems();
             props.addHistory(props.items);
@@ -97,33 +99,32 @@ const listScreen = (props) => {
         />
       </View>
 
-      <ItemsList 
+      <ItemsList
         callBack={props.route.params.callBack}
       />
     </View>
   );
-}
-
-const mapStateToProps = (state) => {
-    return {
-      items: state.items,
-      history: state.history,
-      style: state.style,
-    };
 };
 
+const mapStateToProps = (state) => ({
+  items: state.items,
+  history: state.history,
+  style: state.style,
+});
+
 export default connect(
-    mapStateToProps, 
-    {
-      addItem: addItem,
-      loadItems: loadItems,
-      downloadItems: downloadItems,
-      saveItems: saveItems,
-      uploadItems: uploadItems,
-      showError: showError,
-      interaction: interaction,
-      undoItems, undoItems,
-      addHistory: addHistory,
-      getStyle: getStyle,
-    }
+  mapStateToProps,
+  {
+    addItem,
+    loadItems,
+    downloadItems,
+    saveItems,
+    uploadItems,
+    showError,
+    interaction,
+    undoItems,
+    undoItems,
+    addHistory,
+    getStyle,
+  },
 )(listScreen);

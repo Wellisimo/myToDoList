@@ -1,13 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {connect} from 'react-redux';
-import { AntDesign } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+import { connect } from 'react-redux';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
 import ListScreen from '../../Screens/ListScreen';
 import UserInfoScreen from '../../Screens/UserInfoScreen';
 
-import {changeStyle} from '../../redux/actions';
+import { changeStyle } from '../../redux/actions';
 
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
@@ -18,17 +17,17 @@ const bottomTab = (props) => {
   const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
 
   return (
-    <Tab.Navigator 
+    <Tab.Navigator
       initialRouteName="List"
-      backBehavior='none'
+      backBehavior="none"
       tabBarOptions={{
         showIcon: true,
         activeBackgroundColor: props.style ? 'white' : 'black',
         style: globalStyles.tabBarOptions,
       }}
     >
-      <Tab.Screen 
-        name="List" 
+      <Tab.Screen
+        name="List"
         component={ListScreen}
         options={{
           tabBarIcon: () => <FontAwesome name="list-ol" size={24} color={props.style ? 'black' : 'white'} />,
@@ -36,8 +35,8 @@ const bottomTab = (props) => {
         }}
         initialParams={{ callBack: props.route.params.callBack }}
       />
-      <Tab.Screen 
-        name="User" 
+      <Tab.Screen
+        name="User"
         component={UserInfoScreen}
         options={{
           tabBarIcon: () => <AntDesign name="user" size={24} color={props.style ? 'black' : 'white'} />,
@@ -47,17 +46,15 @@ const bottomTab = (props) => {
       />
     </Tab.Navigator>
   );
-}
-
-const mapStateToProps = (state) => {
-    return {
-      style: state.style
-    };
 };
 
+const mapStateToProps = (state) => ({
+  style: state.style,
+});
+
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   {
-    changeStyle: changeStyle
-  }
+    changeStyle,
+  },
 )(bottomTab);

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import {
+  Text, TouchableOpacity, View, LogBox,
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {connect} from 'react-redux';
-import { LogBox } from 'react-native';
+import { connect } from 'react-redux';
 
-import { Entypo } from '@expo/vector-icons';
-import { Fontisto } from '@expo/vector-icons';
+import { Entypo, Fontisto } from '@expo/vector-icons';
 
-import {logout, changeStyle} from '../../redux/actions';
+import { logout, changeStyle } from '../../redux/actions';
 
 import BottomTab from '../BottomTab';
 import globalStylesWhite from '../../Styles/Light';
@@ -19,24 +19,24 @@ const Stack = createStackNavigator();
 const bottomTabWithHeader = (props) => {
   const [message, setMessage] = useState('');
   const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
-  
+
   const logOutHandler = async () => {
-    const jsonValue = JSON.stringify(false)
-    await AsyncStorage.setItem('isLogged', jsonValue)
+    const jsonValue = JSON.stringify(false);
+    await AsyncStorage.setItem('isLogged', jsonValue);
     props.logout();
-  }
+  };
 
   const callBack = (data) => {
     setMessage(data);
-  }
-  
+  };
+
   LogBox.ignoreLogs([
     'Non-serializable values were found in the navigation state',
   ]);
 
   return (
-    <Stack.Navigator 
-      headerMode='float'
+    <Stack.Navigator
+      headerMode="float"
     >
       <Stack.Screen
         name="BottomTab"
@@ -44,49 +44,52 @@ const bottomTabWithHeader = (props) => {
         options={{
           title: null,
           header: () => (
-            <View style={[{width: '100%', flexDirection: 'row', justifyContent: 'space-evenly'}, , globalStyles.navigationHeader]}>
+            <View style={[{ width: '100%', flexDirection: 'row', justifyContent: 'space-evenly' }, , globalStyles.navigationHeader]}>
 
-              <TouchableOpacity 
-                style={{width: '20%', height: 60, justifyContent: 'flex-end', alignItems: 'flex-start'}} 
+              <TouchableOpacity
+                style={{
+                  width: '20%', height: 60, justifyContent: 'flex-end', alignItems: 'flex-start',
+                }}
                 onPress={() => props.changeStyle()}
               >
                 {props.style
-                  ? <Entypo name="moon" size={24} color='black' style={{paddingBottom: 10, paddingLeft: 20}}/>
-                  : <Fontisto name="sun" size={24} color='white' style={{paddingBottom: 10, paddingLeft: 20}}/>
-                }
+                  ? <Entypo name="moon" size={24} color="black" style={{ paddingBottom: 10, paddingLeft: 20 }} />
+                  : <Fontisto name="sun" size={24} color="white" style={{ paddingBottom: 10, paddingLeft: 20 }} />}
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={{width: '60%', height: 60, justifyContent: 'flex-end', alignItems: 'center'}} 
+              <TouchableOpacity
+                style={{
+                  width: '60%', height: 60, justifyContent: 'flex-end', alignItems: 'center',
+                }}
                 onPress={logOutHandler}
               >
-                <Text style={[{paddingBottom: 10}, globalStyles.buttonText]}>Log Out</Text>
+                <Text style={[{ paddingBottom: 10 }, globalStyles.buttonText]}>Log Out</Text>
               </TouchableOpacity>
 
-              <Text style={[{width: '20%', paddingTop: 25, paddingLeft: 10} ,globalStyles.supportText]}>
-                Last pressed: {message ? message : props.route.params?.show}
+              <Text style={[{ width: '20%', paddingTop: 25, paddingLeft: 10 }, globalStyles.supportText]}>
+                Last pressed:
+                {' '}
+                {message || props.route.params?.show}
               </Text>
 
             </View>
-          )
+          ),
         }}
-        initialParams={{ callBack: callBack }}
+        initialParams={{ callBack }}
       />
     </Stack.Navigator>
-  )
-}
-
-const mapStateToProps = (state) => {
-    return {
-      test: state.test,
-      style: state.style
-    };
+  );
 };
 
+const mapStateToProps = (state) => ({
+  test: state.test,
+  style: state.style,
+});
+
 export default connect(
-  mapStateToProps, 
+  mapStateToProps,
   {
-    logout: logout, 
-    changeStyle: changeStyle
-  }
+    logout,
+    changeStyle,
+  },
 )(bottomTabWithHeader);

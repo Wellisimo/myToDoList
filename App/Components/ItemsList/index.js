@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, FlatList, Text } from 'react-native';
-import {connect} from 'react-redux';
+import {
+  StyleSheet, View, FlatList, Text,
+} from 'react-native';
+import { connect } from 'react-redux';
 
 import ItemsListText from '../ItemsListText';
 
@@ -11,35 +13,31 @@ const itemsList = (props) => {
   const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
 
   return (
-      <View style={[styles.listContainer, globalStyles.background]}>
-        <FlatList
-          keyExtractor={(item, index) => index.toString()}
-          style={styles.list}
-          ItemSeparatorComponent={() => <View style={[{borderBottomColor: props.style ? 'black' : 'white'}, styles.listSeparator]}/>}
-          data={props.items}
-          renderItem={({item}) => {
-            return (
-              <View style={styles.listItem}>
-                <Text>- </Text>
-                <ItemsListText 
-                  item={item}
-                  callBack={props.callBack}
-                />
-              </View>
-            )
-          }}
-        />
-      </View>
-  )
-}
-
-const mapStateToProps = (state) => {
-    return {
-      items: state.items,
-      history: state.history,
-      style: state.style,
-    };
+    <View style={[styles.listContainer, globalStyles.background]}>
+      <FlatList
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.list}
+        ItemSeparatorComponent={() => <View style={[{ borderBottomColor: props.style ? 'black' : 'white' }, styles.listSeparator]} />}
+        data={props.items}
+        renderItem={({ item }) => (
+          <View style={styles.listItem}>
+            <Text>- </Text>
+            <ItemsListText
+              item={item}
+              callBack={props.callBack}
+            />
+          </View>
+        )}
+      />
+    </View>
+  );
 };
+
+const mapStateToProps = (state) => ({
+  items: state.items,
+  history: state.history,
+  style: state.style,
+});
 
 export default connect(mapStateToProps)(itemsList);
 

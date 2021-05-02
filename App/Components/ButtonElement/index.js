@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
@@ -9,25 +8,23 @@ import globalStylesDark from '../../Styles/Dark';
 const buttonElement = (props) => {
   const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
 
-    return (
-        <TouchableOpacity
-          style={[styles.buttonContainer, globalStyles.buttonContainer]}
-          onPress={props.onPress}
-        >
-          <Text
-            style={globalStyles.buttonText}
-          >
-            {props.title}
-          </Text>
-        </TouchableOpacity>
-    )
-}
-
-const mapStateToProps = (state) => {
-    return {
-      style: state.style,
-    };
+  return (
+    <TouchableOpacity
+      style={[styles.buttonContainer, globalStyles.buttonContainer]}
+      onPress={props.onPress}
+    >
+      <Text
+        style={globalStyles.buttonText}
+      >
+        {props.title}
+      </Text>
+    </TouchableOpacity>
+  );
 };
+
+const mapStateToProps = (state) => ({
+  style: state.style,
+});
 
 export default connect(mapStateToProps)(buttonElement);
 
@@ -40,5 +37,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 10,
-  }
+  },
 });
