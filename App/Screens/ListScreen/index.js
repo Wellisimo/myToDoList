@@ -41,14 +41,7 @@ const listScreen = props => {
 
   return (
     <View style={[styles.container, globalStyles.background]}>
-      <Input
-        text={text}
-        textInputHandler={textInputHandler}
-        placeholder="type here to add item"
-        onFocus={() => {
-          props.route.params.callBack('input');
-        }}
-      />
+      <Input text={text} textInputHandler={textInputHandler} placeholder="type here to add item" onFocus={() => {}} />
 
       <View style={styles.buttonsContainer}>
         <ButtonElement
@@ -58,7 +51,6 @@ const listScreen = props => {
               dispatch(addItem(text));
               dispatch(addHistory(items));
               setText('');
-              props.route.params.callBack('Add button');
             } catch (err) {
               dispatch(showError(err));
             }
@@ -68,7 +60,6 @@ const listScreen = props => {
           title="Undo"
           onPress={() => {
             dispatch(undoItems(history));
-            props.route.params.callBack('Undo button');
           }}
         />
       </View>
@@ -77,15 +68,12 @@ const listScreen = props => {
           title="Save"
           onPress={() => {
             dispatch(saveItems(items));
-            props.route.params.callBack('Save button');
           }}
         />
         <ButtonElement
           title="Load"
           onPress={() => {
             dispatch(loadItems());
-            dispatch(addHistory(items));
-            props.route.params.callBack('Load button');
           }}
         />
       </View>
@@ -94,7 +82,6 @@ const listScreen = props => {
           title="Upload"
           onPress={() => {
             dispatch(uploadItems(items));
-            props.route.params.callBack('Upload button');
           }}
         />
         <ButtonElement
@@ -102,12 +89,11 @@ const listScreen = props => {
           onPress={() => {
             dispatch(downloadItems());
             dispatch(addHistory(items));
-            props.route.params.callBack('Download button');
           }}
         />
       </View>
 
-      <ItemsList callBack={props.route.params.callBack} />
+      <ItemsList />
     </View>
   );
 };

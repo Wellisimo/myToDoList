@@ -52,7 +52,6 @@ const itemsListText = props => {
         props.item.done ? { textDecorationLine: 'line-through', color: '#878787' } : null,
       ]}
       onPress={() => {
-        props.callBack(`List item ${props.item.value}`);
         setEditable(true);
       }}
       onLongPress={() =>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, TouchableOpacity, View, LogBox } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -25,12 +25,6 @@ const bottomTabWithHeader = props => {
     await AsyncStorage.setItem('isLogged', jsonValue);
     dispatch(logout());
   };
-
-  const callBack = data => {
-    setMessage(data);
-  };
-
-  LogBox.ignoreLogs(['Non-serializable values were found in the navigation state']);
 
   return (
     <Stack.Navigator headerMode="float">
@@ -78,7 +72,6 @@ const bottomTabWithHeader = props => {
             </View>
           ),
         }}
-        initialParams={{ callBack }}
       />
     </Stack.Navigator>
   );

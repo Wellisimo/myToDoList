@@ -24,7 +24,7 @@ const itemsList = props => {
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <Text>- </Text>
-            <ItemsListText item={item} callBack={props.callBack} />
+            <ItemsListText item={item} />
           </View>
         )}
       />

@@ -28,19 +28,17 @@ const bottomTab = props => {
         name="List"
         component={ListScreen}
         options={{
-          tabBarIcon: () => <FontAwesome name="list-ol" size={24} color={props.style ? 'black' : 'white'} />,
+          tabBarIcon: () => <FontAwesome name="list-ol" size={24} color={style ? 'black' : 'white'} />,
           tabBarLabel: () => null,
         }}
-        initialParams={{ callBack: props.route.params.callBack }}
       />
       <Tab.Screen
         name="User"
         component={UserInfoScreen}
         options={{
-          tabBarIcon: () => <AntDesign name="user" size={24} color={props.style ? 'black' : 'white'} />,
+          tabBarIcon: () => <AntDesign name="user" size={24} color={style ? 'black' : 'white'} />,
           tabBarLabel: () => null,
         }}
-        initialParams={{ callBack: props.route.params.callBack }}
       />
     </Tab.Navigator>
   );
