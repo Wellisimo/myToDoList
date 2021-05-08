@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const addItem = (item) => ({
+export const addItem = item => ({
   type: 'ADD_ITEM',
   payload: item,
 });
@@ -10,34 +10,34 @@ export const updateItem = (oldValue, newValue) => ({
   payload: { oldValue, newValue },
 });
 
-export const markItem = (value) => ({
+export const markItem = value => ({
   type: 'MARK_ITEM',
   payload: value,
 });
 
-export const deleteItem = (value) => ({
+export const deleteItem = value => ({
   type: 'DELETE_ITEM',
   payload: value,
 });
 
-export const addHistory = (items) => ({
+export const addHistory = items => ({
   type: 'ADD_HISTORY',
   payload: items,
 });
 
-export const undoItems = (data) => ({
+export const undoItems = data => ({
   type: 'UNDO_ITEMS',
   payload: data,
 });
 
-export const loadItems = () => async (dispatch) => {
+export const loadItems = () => async dispatch => {
   const value = await AsyncStorage.getItem('List');
   if (value !== null) {
     dispatch({ type: 'LOAD_ITEMS', payload: JSON.parse(value) });
   }
 };
 
-export const downloadItems = () => async (dispatch) => {
+export const downloadItems = () => async dispatch => {
   const value = await fetch('https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app/list.json');
   if (value !== null) {
     const jsonValue = await value.json();
@@ -45,12 +45,12 @@ export const downloadItems = () => async (dispatch) => {
   }
 };
 
-export const saveItems = (value) => async (dispatch) => {
+export const saveItems = value => async dispatch => {
   const jsonValue = JSON.stringify(value);
   await AsyncStorage.setItem('List', jsonValue);
 };
 
-export const uploadItems = (value) => async (dispatch) => {
+export const uploadItems = value => async dispatch => {
   const jsonValue = JSON.stringify(value);
   fetch('https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app/list.json', {
     method: 'PUT',
@@ -58,38 +58,33 @@ export const uploadItems = (value) => async (dispatch) => {
   });
 };
 
-export const showError = (value) => ({
+export const showError = value => ({
   type: 'SHOW_ERROR',
   payload: value,
 });
 
-export const interaction = (item) => ({
-  type: 'PRESSED_ITEM',
-  payload: item,
-});
-
-export const login = () => async (dispatch) => {
+export const login = () => async dispatch => {
   const jsonValue = JSON.stringify(true);
   await AsyncStorage.setItem('isLogged', jsonValue);
   const result = await AsyncStorage.getItem('isLogged');
   dispatch({ type: 'LOGIN_CHECK', payload: JSON.parse(result) });
 };
 
-export const logout = () => async (dispatch) => {
+export const logout = () => async dispatch => {
   const jsonValue = JSON.stringify(false);
   await AsyncStorage.setItem('isLogged', jsonValue);
   const result = await AsyncStorage.getItem('isLogged');
   dispatch({ type: 'LOGIN_CHECK', payload: JSON.parse(result) });
 };
 
-export const checkLogin = () => async (dispatch) => {
+export const checkLogin = () => async dispatch => {
   const value = await AsyncStorage.getItem('isLogged');
   if (value !== null) {
     dispatch({ type: 'LOGIN_CHECK', payload: JSON.parse(value) });
   }
 };
 
-export const changeStyle = () => async (dispatch) => {
+export const changeStyle = () => async dispatch => {
   const jsonResult = await AsyncStorage.getItem('style');
   const result = jsonResult ? JSON.parse(jsonResult) : null;
   if (result === null) {
@@ -103,7 +98,7 @@ export const changeStyle = () => async (dispatch) => {
   }
 };
 
-export const getStyle = () => async (dispatch) => {
+export const getStyle = () => async dispatch => {
   const jsonResult = await AsyncStorage.getItem('style');
   const result = jsonResult ? JSON.parse(jsonResult) : null;
   if (result === null) {

@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
-const input = (props) => {
-  const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
+const input = props => {
+  const style = useSelector(state => state.style);
+  const globalStyles = style ? globalStylesWhite : globalStylesDark;
 
   return (
     <View style={styles.textContainer}>
@@ -21,11 +22,7 @@ const input = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  style: state.style,
-});
-
-export default connect(mapStateToProps)(input);
+export default input;
 
 const styles = StyleSheet.create({
   textInput: {

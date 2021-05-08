@@ -9,7 +9,7 @@ const itemsReducer = (items = [], action) => {
       return items;
     case 'UPDATE_ITEM':
       if (action.payload.newValue !== '' && action.payload.newValue !== action.payload.oldValue) {
-        const updateTarget = items.find((element) => element.value === action.payload.oldValue);
+        const updateTarget = items.find(element => element.value === action.payload.oldValue);
         const updateTargetIndex = items.indexOf(updateTarget);
         const modifiedUpdateTarget = { value: action.payload.newValue, done: updateTarget.done };
         const newUpdateList = [...items];
@@ -18,14 +18,14 @@ const itemsReducer = (items = [], action) => {
       }
       return items;
     case 'MARK_ITEM':
-      const markTarget = items.find((element) => element.value === action.payload);
+      const markTarget = items.find(element => element.value === action.payload);
       const markTargetIndex = items.indexOf(markTarget);
       const modifiedMarkTarget = { value: markTarget.value, done: !markTarget.done };
       const newMarkList = [...items];
       newMarkList.splice(markTargetIndex, 1, modifiedMarkTarget);
       return newMarkList;
     case 'DELETE_ITEM':
-      return items.filter((element) => element.value !== action.payload);
+      return items.filter(element => element.value !== action.payload);
     case 'LOAD_ITEMS':
       return action.payload;
     case 'DOWNLOAD_ITEMS':
@@ -68,13 +68,6 @@ const errorReducer = (error = '', action) => {
   return error;
 };
 
-const interactionReducer = (pressed = '', action) => {
-  if (action.type === 'PRESSED_ITEM') {
-    return action.payload;
-  }
-  return pressed;
-};
-
 const loginReducer = (login = false, action) => {
   if (action.type === 'LOGIN_CHECK') {
     return action.payload;
@@ -95,7 +88,6 @@ const styleReducer = (light = true, action) => {
 export default combineReducers({
   items: itemsReducer,
   error: errorReducer,
-  test: interactionReducer,
   login: loginReducer,
   history: historyReducer,
   style: styleReducer,

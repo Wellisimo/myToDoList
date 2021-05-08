@@ -1,32 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
-const buttonElement = (props) => {
-  const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
+const buttonElement = props => {
+  const style = useSelector(state => state.style);
+  const globalStyles = style ? globalStylesWhite : globalStylesDark;
 
   return (
-    <TouchableOpacity
-      style={[styles.buttonContainer, globalStyles.buttonContainer]}
-      onPress={props.onPress}
-    >
-      <Text
-        style={globalStyles.buttonText}
-      >
-        {props.title}
-      </Text>
+    <TouchableOpacity style={[styles.buttonContainer, globalStyles.buttonContainer]} onPress={props.onPress}>
+      <Text style={globalStyles.buttonText}>{props.title}</Text>
     </TouchableOpacity>
   );
 };
 
-const mapStateToProps = (state) => ({
-  style: state.style,
-});
-
-export default connect(mapStateToProps)(buttonElement);
+export default buttonElement;
 
 const styles = StyleSheet.create({
   buttonContainer: {

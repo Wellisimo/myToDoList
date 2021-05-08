@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import {
-  Text, View, TouchableOpacity, TextInput,
-} from 'react-native';
+import { Text, View, TouchableOpacity, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import styles from './styles';
 
@@ -12,42 +10,44 @@ import { showError, login } from '../../redux/actions/index';
 
 const URL = 'https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app';
 
-const loginScreen = (props) => {
-  const [login, setLogin] = useState('');
+const loginScreen = () => {
+  const [userLogin, setUserLogin] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const isUserLoginValid = async (login, password) => {
     try {
       const result = await fetch(`${URL}/users.json`);
       const jsonResult = await result.json();
       if (jsonResult) {
-        return !!Object.values(jsonResult).find((element) => element.login === login && element.password === password);
+        return !!Object.values(jsonResult).find(
+          element => element.login === userLogin && element.password === password,
+        );
       }
       throw new UserNotFound('please register any user first');
     } catch (err) {
-      props.showError(`Error ${err.name}: ${err.message}`);
+      dispatch(showError(`Error ${err.name}: ${err.message}`));
     }
   };
 
   const handleLogin = async () => {
-    if (!login || !password) {
-      props.showError('No login or password entered');
+    if (!userLogin || !password) {
+      dispatch(showError('No login or password entered'));
       return;
     }
 
-    const loginGood = await isUserLoginValid(login, password);
+    const loginGood = await isUserLoginValid(userLogin, password);
 
     if (loginGood) {
       const jsonValue = JSON.stringify(true);
       await AsyncStorage.setItem('isLogged', jsonValue);
-      setLogin('');
+      setUserLogin('');
       setPassword('');
-      props.login();
-      // props.navigation.navigate('BottomTabWithHeader');
+      dispatch(login());
     } else {
-      setLogin('');
+      setUserLogin('');
       setPassword('');
-      props.showError('Login or password is incorrect');
+      dispatch(showError('Login or password is incorrect'));
     }
   };
 
@@ -56,8 +56,8 @@ const loginScreen = (props) => {
       <Text style={[styles.text, { fontSize: 20, fontWeight: '600', paddingBottom: 50 }]}>Enter your data</Text>
       <TextInput
         style={styles.textInput}
-        value={login}
-        onChangeText={setLogin}
+        value={userLogin}
+        onChangeText={setUserLogin}
         placeholder="login"
         autoCapitalize="none"
       />
@@ -69,14 +69,11 @@ const loginScreen = (props) => {
         autoCapitalize="none"
         secureTextEntry
       />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleLogin}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.text}>Login</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default connect(null, { showError, login })(loginScreen);
+export default loginScreen;

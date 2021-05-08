@@ -1,20 +1,19 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
 import ListScreen from '../../Screens/ListScreen';
 import UserInfoScreen from '../../Screens/UserInfoScreen';
-
-import { changeStyle } from '../../redux/actions';
 
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
 const Tab = createBottomTabNavigator();
 
-const bottomTab = (props) => {
-  const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
+const bottomTab = props => {
+  const style = useSelector(state => state.style);
+  const globalStyles = style ? globalStylesWhite : globalStylesDark;
 
   return (
     <Tab.Navigator
@@ -24,8 +23,7 @@ const bottomTab = (props) => {
         showIcon: true,
         activeBackgroundColor: props.style ? 'white' : 'black',
         style: globalStyles.tabBarOptions,
-      }}
-    >
+      }}>
       <Tab.Screen
         name="List"
         component={ListScreen}
@@ -48,13 +46,4 @@ const bottomTab = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  style: state.style,
-});
-
-export default connect(
-  mapStateToProps,
-  {
-    changeStyle,
-  },
-)(bottomTab);
+export default bottomTab;

@@ -1,31 +1,30 @@
 import React from 'react';
-import {
-  StyleSheet, View, FlatList, Text,
-} from 'react-native';
-import { connect } from 'react-redux';
+import { StyleSheet, View, FlatList, Text } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import ItemsListText from '../ItemsListText';
 
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
-const itemsList = (props) => {
-  const globalStyles = props.style ? globalStylesWhite : globalStylesDark;
+const itemsList = props => {
+  const items = useSelector(state => state.items);
+  const style = useSelector(state => state.style);
+  const globalStyles = style ? globalStylesWhite : globalStylesDark;
 
   return (
     <View style={[styles.listContainer, globalStyles.background]}>
       <FlatList
         keyExtractor={(item, index) => index.toString()}
         style={styles.list}
-        ItemSeparatorComponent={() => <View style={[{ borderBottomColor: props.style ? 'black' : 'white' }, styles.listSeparator]} />}
-        data={props.items}
+        ItemSeparatorComponent={() => (
+          <View style={[{ borderBottomColor: props.style ? 'black' : 'white' }, styles.listSeparator]} />
+        )}
+        data={items}
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <Text>- </Text>
-            <ItemsListText
-              item={item}
-              callBack={props.callBack}
-            />
+            <ItemsListText item={item} callBack={props.callBack} />
           </View>
         )}
       />
@@ -33,13 +32,7 @@ const itemsList = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  items: state.items,
-  history: state.history,
-  style: state.style,
-});
-
-export default connect(mapStateToProps)(itemsList);
+export default itemsList;
 
 const styles = StyleSheet.create({
   listContainer: {
