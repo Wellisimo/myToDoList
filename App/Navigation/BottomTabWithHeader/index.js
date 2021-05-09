@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -27,53 +27,59 @@ const bottomTabWithHeader = props => {
   };
 
   return (
-    <Stack.Navigator headerMode="float">
-      <Stack.Screen
-        name="BottomTab"
-        component={BottomTab}
-        options={{
-          title: null,
-          header: () => (
-            <View
-              style={[
-                { width: '100%', flexDirection: 'row', justifyContent: 'space-evenly' },
-                ,
-                globalStyles.navigationHeader,
-              ]}>
-              <TouchableOpacity
-                style={{
-                  width: '20%',
-                  height: 60,
-                  justifyContent: 'flex-end',
-                  alignItems: 'flex-start',
-                }}
-                onPress={() => dispatch(changeStyle())}>
-                {style ? (
-                  <Entypo name="moon" size={24} color="black" style={{ paddingBottom: 10, paddingLeft: 20 }} />
-                ) : (
-                  <Fontisto name="sun" size={24} color="white" style={{ paddingBottom: 10, paddingLeft: 20 }} />
-                )}
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  width: '60%',
-                  height: 60,
-                  justifyContent: 'flex-end',
-                  alignItems: 'center',
-                }}
-                onPress={logOutHandler}>
-                <Text style={[{ paddingBottom: 10 }, globalStyles.buttonText]}>Log Out</Text>
-              </TouchableOpacity>
-
-              <Text style={[{ width: '20%', paddingTop: 25, paddingLeft: 10 }, globalStyles.supportText]}>
-                Last pressed: {message || props.route.params?.show}
-              </Text>
-            </View>
-          ),
-        }}
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        barStyle={style ? 'dark-content' : 'light-content'}
+        backgroundColor={globalStyles.background.backgroundColor}
       />
-    </Stack.Navigator>
+      <Stack.Navigator headerMode="float">
+        <Stack.Screen
+          name="BottomTab"
+          component={BottomTab}
+          options={{
+            title: null,
+            header: () => (
+              <View
+                style={[
+                  { width: '100%', flexDirection: 'row', justifyContent: 'space-evenly' },
+                  ,
+                  globalStyles.navigationHeader,
+                ]}>
+                <TouchableOpacity
+                  style={{
+                    width: '20%',
+                    height: 60,
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-start',
+                  }}
+                  onPress={() => dispatch(changeStyle())}>
+                  {style ? (
+                    <Entypo name="moon" size={24} color="black" style={{ paddingBottom: 10, paddingLeft: 20 }} />
+                  ) : (
+                    <Fontisto name="sun" size={24} color="white" style={{ paddingBottom: 10, paddingLeft: 20 }} />
+                  )}
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    width: '60%',
+                    height: 60,
+                    justifyContent: 'flex-end',
+                    alignItems: 'center',
+                  }}
+                  onPress={logOutHandler}>
+                  <Text style={[{ paddingBottom: 10 }, globalStyles.buttonText]}>Log Out</Text>
+                </TouchableOpacity>
+
+                <Text style={[{ width: '20%', paddingTop: 25, paddingLeft: 10 }, globalStyles.supportText]}>
+                  Last pressed: {message || props.route.params?.show}
+                </Text>
+              </View>
+            ),
+          }}
+        />
+      </Stack.Navigator>
+    </SafeAreaView>
   );
 };
 

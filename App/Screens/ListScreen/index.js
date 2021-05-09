@@ -24,8 +24,8 @@ import globalStylesDark from '../../Styles/Dark';
 
 const listScreen = props => {
   const [text, setText] = useState('');
-  const items = useSelector(state => state.items);
   const style = useSelector(state => state.style);
+  const items = useSelector(state => state.items);
   const history = useSelector(state => state.history);
 
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ const listScreen = props => {
 
   return (
     <View style={[styles.container, globalStyles.background]}>
-      <Input text={text} textInputHandler={textInputHandler} placeholder="type here to add item" onFocus={() => {}} />
+      <Input text={text} textInputHandler={textInputHandler} placeholder="type here to add item" />
 
       <View style={styles.buttonsContainer}>
         <ButtonElement
@@ -52,7 +52,7 @@ const listScreen = props => {
               dispatch(addHistory(items));
               setText('');
             } catch (err) {
-              dispatch(showError(err));
+              dispatch(showError(err.message));
             }
           }}
         />
@@ -74,6 +74,7 @@ const listScreen = props => {
           title="Load"
           onPress={() => {
             dispatch(loadItems());
+            dispatch(addHistory());
           }}
         />
       </View>
@@ -88,7 +89,7 @@ const listScreen = props => {
           title="Download"
           onPress={() => {
             dispatch(downloadItems());
-            dispatch(addHistory(items));
+            dispatch(addHistory());
           }}
         />
       </View>

@@ -11,7 +11,7 @@ import globalStylesDark from '../../Styles/Dark';
 
 const Tab = createBottomTabNavigator();
 
-const bottomTab = props => {
+const bottomTab = () => {
   const style = useSelector(state => state.style);
   const globalStyles = style ? globalStylesWhite : globalStylesDark;
 
@@ -21,7 +21,7 @@ const bottomTab = props => {
       backBehavior="none"
       tabBarOptions={{
         showIcon: true,
-        activeBackgroundColor: props.style ? 'white' : 'black',
+        activeBackgroundColor: style ? 'white' : 'black',
         style: globalStyles.tabBarOptions,
       }}>
       <Tab.Screen

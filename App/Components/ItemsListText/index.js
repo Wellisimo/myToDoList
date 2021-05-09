@@ -12,13 +12,12 @@ const itemsListText = props => {
   const [text, setText] = useState(props.item.value);
   const [editable, setEditable] = useState(false);
   const input = useRef(null);
-  const items = useSelector(state => state.items);
   const style = useSelector(state => state.style);
   const dispatch = useDispatch();
   const globalStyles = style ? globalStylesWhite : globalStylesDark;
 
   useEffect(() => {
-    // console.log(`List item ${props.item.value} rendered`);
+    console.log(`List item ${props.item.value} rendered`);
     if (input.current && !input.current.isFocused()) {
       setText(props.item.value);
     }
@@ -38,7 +37,7 @@ const itemsListText = props => {
         setEditable(false);
       }}
       onSubmitEditing={() => {
-        dispatch(addHistory(items));
+        dispatch(addHistory());
         dispatch(updateItem(props.item.value, text));
       }}
       onChangeText={setText}
@@ -64,11 +63,11 @@ const itemsListText = props => {
           buttonIndex => {
             switch (buttonIndex) {
               case 0:
-                dispatch(addHistory(items));
+                dispatch(addHistory());
                 dispatch(markItem(props.item.value));
                 break;
               case 1:
-                dispatch(addHistory(items));
+                dispatch(addHistory());
                 dispatch(deleteItem(props.item.value));
                 break;
             }
@@ -80,7 +79,7 @@ const itemsListText = props => {
   );
 };
 
-export default itemsListText;
+export default React.memo(itemsListText);
 
 const styles = StyleSheet.create({
   container: {

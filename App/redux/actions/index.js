@@ -20,10 +20,11 @@ export const deleteItem = value => ({
   payload: value,
 });
 
-export const addHistory = items => ({
-  type: 'ADD_HISTORY',
-  payload: items,
-});
+export const addHistory = value => (dispatch, getState) => {
+  const items = value || getState().items;
+  console.log(items);
+  dispatch({ type: 'ADD_HISTORY', payload: items });
+};
 
 export const undoItems = data => ({
   type: 'UNDO_ITEMS',

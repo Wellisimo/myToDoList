@@ -13,6 +13,12 @@ const itemsReducer = (items = [], action) => {
         const updateTargetIndex = items.indexOf(updateTarget);
         const modifiedUpdateTarget = { value: action.payload.newValue, done: updateTarget.done };
         const newUpdateList = [...items];
+        // const newUpdateList = items.map(element => {
+        //   if (element.value === action.payload.oldValue) {
+        //     element.value = action.payload.newValue;
+        //   }
+        //   return element;
+        // });
         newUpdateList.splice(updateTargetIndex, 1, modifiedUpdateTarget);
         return newUpdateList;
       }

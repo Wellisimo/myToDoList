@@ -1,5 +1,4 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { Root } from 'native-base';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
