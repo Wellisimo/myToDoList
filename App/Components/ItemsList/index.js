@@ -9,22 +9,23 @@ import globalStylesDark from '../../Styles/Dark';
 
 const itemsList = props => {
   const items = useSelector(state => state.items);
-  const style = useSelector(state => state.style);
-  const globalStyles = style ? globalStylesWhite : globalStylesDark;
+  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
+  const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
     <View style={[styles.listContainer, globalStyles.background]}>
       <FlatList
+        removeClippedSubviews={false}
         keyExtractor={(item, index) => index.toString()}
         style={styles.list}
         ItemSeparatorComponent={() => (
-          <View style={[{ borderBottomColor: props.style ? 'black' : 'white' }, styles.listSeparator]} />
+          <View style={[{ borderBottomColor: isLightThemeEnabled ? 'black' : 'white' }, styles.listSeparator]} />
         )}
         data={items}
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <Text>- </Text>
-            <ItemsListText item={item} />
+            <ItemsListText item={item} onPress={props.onPress} />
           </View>
         )}
       />

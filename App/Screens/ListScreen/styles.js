@@ -9,8 +9,6 @@ export default styles = StyleSheet.create({
     paddingBottom: '40%',
     width: '100%',
     height: '100%',
-    borderTopColor: 'black',
-    borderTopWidth: 1,
   },
   tips: {
     alignSelf: 'flex-start',

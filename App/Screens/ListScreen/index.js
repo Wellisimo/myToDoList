@@ -24,12 +24,12 @@ import globalStylesDark from '../../Styles/Dark';
 
 const listScreen = props => {
   const [text, setText] = useState('');
-  const style = useSelector(state => state.style);
+  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
   const items = useSelector(state => state.items);
   const history = useSelector(state => state.history);
 
   const dispatch = useDispatch();
-  const globalStyles = style ? globalStylesWhite : globalStylesDark;
+  const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   const textInputHandler = text => {
     setText(text);
@@ -41,13 +41,19 @@ const listScreen = props => {
 
   return (
     <View style={[styles.container, globalStyles.background]}>
-      <Input text={text} textInputHandler={textInputHandler} placeholder="type here to add item" />
+      <Input
+        text={text}
+        textInputHandler={textInputHandler}
+        placeholder="type here to add item"
+        onFocus={props.navigation.setParams}
+      />
 
       <View style={styles.buttonsContainer}>
         <ButtonElement
           title="Add"
           onPress={() => {
             try {
+              props.navigation.setParams({ message: 'Add' });
               dispatch(addItem(text));
               dispatch(addHistory(items));
               setText('');
@@ -59,6 +65,7 @@ const listScreen = props => {
         <ButtonElement
           title="Undo"
           onPress={() => {
+            props.navigation.setParams({ message: 'Undo' });
             dispatch(undoItems(history));
           }}
         />
@@ -67,12 +74,14 @@ const listScreen = props => {
         <ButtonElement
           title="Save"
           onPress={() => {
+            props.navigation.setParams({ message: 'Save' });
             dispatch(saveItems(items));
           }}
         />
         <ButtonElement
           title="Load"
           onPress={() => {
+            props.navigation.setParams({ message: 'Load' });
             dispatch(loadItems());
             dispatch(addHistory());
           }}
@@ -82,19 +91,21 @@ const listScreen = props => {
         <ButtonElement
           title="Upload"
           onPress={() => {
+            props.navigation.setParams({ message: 'Upload' });
             dispatch(uploadItems(items));
           }}
         />
         <ButtonElement
           title="Download"
           onPress={() => {
+            props.navigation.setParams({ message: 'Download' });
             dispatch(downloadItems());
             dispatch(addHistory());
           }}
         />
       </View>
 
-      <ItemsList />
+      <ItemsList onPress={props.navigation.setParams} />
     </View>
   );
 };

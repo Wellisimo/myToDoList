@@ -22,7 +22,6 @@ export const deleteItem = value => ({
 
 export const addHistory = value => (dispatch, getState) => {
   const items = value || getState().items;
-  console.log(items);
   dispatch({ type: 'ADD_HISTORY', payload: items });
 };
 

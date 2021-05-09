@@ -12,9 +12,9 @@ const itemsListText = props => {
   const [text, setText] = useState(props.item.value);
   const [editable, setEditable] = useState(false);
   const input = useRef(null);
-  const style = useSelector(state => state.style);
+  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
   const dispatch = useDispatch();
-  const globalStyles = style ? globalStylesWhite : globalStylesDark;
+  const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   useEffect(() => {
     console.log(`List item ${props.item.value} rendered`);
@@ -51,6 +51,7 @@ const itemsListText = props => {
         props.item.done ? { textDecorationLine: 'line-through', color: '#878787' } : null,
       ]}
       onPress={() => {
+        props.onPress({ message: props.item.value });
         setEditable(true);
       }}
       onLongPress={() =>

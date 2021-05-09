@@ -96,5 +96,5 @@ export default combineReducers({
   error: errorReducer,
   login: loginReducer,
   history: historyReducer,
-  style: styleReducer,
+  isLightThemeEnabled: styleReducer,
 });

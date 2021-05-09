@@ -6,8 +6,8 @@ import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
 const buttonElement = props => {
-  const style = useSelector(state => state.style);
-  const globalStyles = style ? globalStylesWhite : globalStylesDark;
+  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
+  const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
     <TouchableOpacity style={[styles.buttonContainer, globalStyles.buttonContainer]} onPress={props.onPress}>

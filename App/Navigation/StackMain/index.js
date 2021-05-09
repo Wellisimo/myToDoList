@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import LoginHandle from '../LoginHandle';
-import BottomTabWithHeader from '../BottomTabWithHeader';
+import BottomTab from '../BottomTab';
 
 import { checkLogin } from '../../redux/actions';
 
@@ -21,12 +21,7 @@ const stackMain = () => {
         {!login ? (
           <Stack.Screen name="LoginHandle" component={LoginHandle} options={{ headerShown: false }} />
         ) : (
-          <Stack.Screen
-            name="BottomTabWithHeader"
-            component={BottomTabWithHeader}
-            options={{ headerShown: false }}
-            initialParams={{ show: 'press something' }}
-          />
+          <Stack.Screen name="BottomTab" component={BottomTab} options={{ headerShown: false }} />
         )}
       </Stack.Navigator>
     </NavigationContainer>

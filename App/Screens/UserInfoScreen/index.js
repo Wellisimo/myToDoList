@@ -16,29 +16,32 @@ const userInfoScreen = props => {
   const [age, setAge] = useState('');
   const [image, setImage] = useState(null);
   const [editable, setEditable] = useState(false);
-  const style = useSelector(state => state.style);
+  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
 
-  const globalStyles = style ? globalStylesWhite : globalStylesDark;
+  const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   useEffect(() => {
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+    const isFocused = props.navigation.isFocused();
+    if (isFocused) {
+      (async () => {
+        if (Platform.OS !== 'web') {
+          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+          }
         }
-      }
-    })();
-    // implement login+password instead of 'userinfo' saving pattern
-    AsyncStorage.getItem('userInfo')
-      .then(result => JSON.parse(result))
-      .then(parsedResult => {
+      })();
+
+      (async () => {
+        const result = await AsyncStorage.getItem('userInfo');
+        const parsedResult = JSON.parse(result);
         if (parsedResult) {
           setName(parsedResult.name);
           setAge(parsedResult.age);
           setImage(parsedResult.image);
         }
-      });
+      })();
+    }
   }, []);
 
   const pickImage = async () => {
@@ -59,8 +62,8 @@ const userInfoScreen = props => {
       <Text style={[styles.text, globalStyles.mainText]}>User Info</Text>
       <TouchableOpacity
         onPress={() => {
+          props.navigation.setParams({ message: 'Image' });
           editable ? pickImage : null;
-          props.route.params.callBack('Image');
         }}>
         <Image
           style={styles.image}
@@ -94,6 +97,7 @@ const userInfoScreen = props => {
       <ButtonElement
         title={!editable ? 'Edit' : 'Save'}
         onPress={() => {
+          props.navigation.setParams({ message: !editable ? 'Edit' : 'Save' });
           if (editable) {
             const jsonValue = JSON.stringify({
               name,
@@ -102,7 +106,6 @@ const userInfoScreen = props => {
             });
             AsyncStorage.setItem('userInfo', jsonValue);
           }
-          props.route.params.callBack(`${!editable ? 'Edit' : 'Save'} button`);
           setEditable(!editable);
         }}
       />

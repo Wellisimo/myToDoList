@@ -1,14 +1,7 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
-import { useSelector } from 'react-redux';
-
-import globalStylesWhite from '../../Styles/Light';
-import globalStylesDark from '../../Styles/Dark';
 
 const input = props => {
-  const style = useSelector(state => state.style);
-  const globalStyles = style ? globalStylesWhite : globalStylesDark;
-
   return (
     <View style={styles.textContainer}>
       <TextInput
@@ -16,7 +9,7 @@ const input = props => {
         value={props.text}
         onChangeText={props.textInputHandler}
         placeholder={props.placeholder}
-        onFocus={props.onFocus}
+        onFocus={() => props.onFocus({ message: 'Input' })}
       />
     </View>
   );

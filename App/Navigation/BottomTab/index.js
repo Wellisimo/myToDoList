@@ -1,46 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector } from 'react-redux';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
-import ListScreen from '../../Screens/ListScreen';
-import UserInfoScreen from '../../Screens/UserInfoScreen';
+import ListScreenNavigator from '../ListScreenNavigator';
+import UserInfoScreenNavigator from '../../Navigation/UserInfoScreenNavigator';
 
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
+import { SafeAreaView, StatusBar } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
 const bottomTab = () => {
-  const style = useSelector(state => state.style);
-  const globalStyles = style ? globalStylesWhite : globalStylesDark;
+  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
+  const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
-    <Tab.Navigator
-      initialRouteName="List"
-      backBehavior="none"
-      tabBarOptions={{
-        showIcon: true,
-        activeBackgroundColor: style ? 'white' : 'black',
-        style: globalStyles.tabBarOptions,
-      }}>
-      <Tab.Screen
-        name="List"
-        component={ListScreen}
-        options={{
-          tabBarIcon: () => <FontAwesome name="list-ol" size={24} color={style ? 'black' : 'white'} />,
-          tabBarLabel: () => null,
-        }}
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar
+        barStyle={isLightThemeEnabled ? 'dark-content' : 'light-content'}
+        backgroundColor={globalStyles.background.backgroundColor}
       />
-      <Tab.Screen
-        name="User"
-        component={UserInfoScreen}
-        options={{
-          tabBarIcon: () => <AntDesign name="user" size={24} color={style ? 'black' : 'white'} />,
-          tabBarLabel: () => null,
-        }}
-      />
-    </Tab.Navigator>
+      <Tab.Navigator
+        initialRouteName="List"
+        backBehavior="none"
+        tabBarOptions={{
+          showIcon: true,
+          activeBackgroundColor: isLightThemeEnabled ? 'white' : 'black',
+          style: globalStyles.tabBarOptions,
+        }}>
+        <Tab.Screen
+          name="ListScreenNavigator"
+          component={ListScreenNavigator}
+          options={{
+            tabBarIcon: () => <FontAwesome name="list-ol" size={24} color={isLightThemeEnabled ? 'black' : 'white'} />,
+            tabBarLabel: () => null,
+          }}
+        />
+        <Tab.Screen
+          name="UserInfoScreenNavigator"
+          component={UserInfoScreenNavigator}
+          options={{
+            tabBarIcon: () => <AntDesign name="user" size={24} color={isLightThemeEnabled ? 'black' : 'white'} />,
+            tabBarLabel: () => null,
+          }}
+        />
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 };
 
