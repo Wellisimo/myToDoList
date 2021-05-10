@@ -12,12 +12,13 @@ const itemsListText = props => {
   const [text, setText] = useState(props.item.value);
   const [editable, setEditable] = useState(false);
   const input = useRef(null);
+
   const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
   const dispatch = useDispatch();
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   useEffect(() => {
-    console.log(`List item ${props.item.value} rendered`);
+    // console.log(`List item ${props.item.value} rendered`);
     if (input.current && !input.current.isFocused()) {
       setText(props.item.value);
     }

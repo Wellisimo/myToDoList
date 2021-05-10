@@ -9,26 +9,22 @@ const itemsReducer = (items = [], action) => {
       return items;
     case 'UPDATE_ITEM':
       if (action.payload.newValue !== '' && action.payload.newValue !== action.payload.oldValue) {
-        const updateTarget = items.find(element => element.value === action.payload.oldValue);
-        const updateTargetIndex = items.indexOf(updateTarget);
-        const modifiedUpdateTarget = { value: action.payload.newValue, done: updateTarget.done };
-        const newUpdateList = [...items];
-        // const newUpdateList = items.map(element => {
-        //   if (element.value === action.payload.oldValue) {
-        //     element.value = action.payload.newValue;
-        //   }
-        //   return element;
-        // });
-        newUpdateList.splice(updateTargetIndex, 1, modifiedUpdateTarget);
+        const newUpdateList = items.map(element => {
+          if (element.value === action.payload.oldValue) {
+            return { ...element, value: action.payload.newValue };
+          }
+          return element;
+        });
         return newUpdateList;
       }
       return items;
     case 'MARK_ITEM':
-      const markTarget = items.find(element => element.value === action.payload);
-      const markTargetIndex = items.indexOf(markTarget);
-      const modifiedMarkTarget = { value: markTarget.value, done: !markTarget.done };
-      const newMarkList = [...items];
-      newMarkList.splice(markTargetIndex, 1, modifiedMarkTarget);
+      const newMarkList = items.map(element => {
+        if (element.value === action.payload) {
+          return { ...element, done: !element.done };
+        }
+        return element;
+      });
       return newMarkList;
     case 'DELETE_ITEM':
       return items.filter(element => element.value !== action.payload);
@@ -49,10 +45,7 @@ const itemsReducer = (items = [], action) => {
 const historyReducer = (history = [], action) => {
   const condition = () => {
     if (history.length) {
-      const lastState = history[history.length - 1];
-      const jsonLastState = JSON.stringify(lastState);
-      const jsonPayload = JSON.stringify(action.payload);
-      if (jsonLastState === jsonPayload) {
+      if (JSON.stringify(history[history.length - 1]) === JSON.stringify(action.payload)) {
         return false;
       }
     }
