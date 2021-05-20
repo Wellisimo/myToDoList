@@ -20,9 +20,10 @@ export default buttonElement;
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 100,
-    height: 25,
-    margin: 5,
+    width: 105,
+    height: 23,
+    marginVertical: 2,
+    marginHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,

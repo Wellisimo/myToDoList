@@ -45,12 +45,12 @@ export const downloadItems = () => async dispatch => {
   }
 };
 
-export const saveItems = value => async dispatch => {
+export const saveItems = value => async () => {
   const jsonValue = JSON.stringify(value);
   await AsyncStorage.setItem('List', jsonValue);
 };
 
-export const uploadItems = value => async dispatch => {
+export const uploadItems = value => async () => {
   const jsonValue = JSON.stringify(value);
   fetch('https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app/list.json', {
     method: 'PUT',

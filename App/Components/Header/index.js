@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from 'react-redux';
-import { Entypo, Fontisto } from '@expo/vector-icons';
+import { Entypo, Fontisto, FontAwesome } from '@expo/vector-icons';
 
 import { logout, changeStyle } from '../../redux/actions';
 
@@ -11,6 +11,8 @@ import globalStylesDark from '../../Styles/Dark';
 
 export default props => {
   const [message, setMessage] = useState('press something');
+  // const [showSearchBar, setShowSearchBar] = useState(false);
+
   const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
   const dispatch = useDispatch();
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
@@ -63,6 +65,12 @@ export default props => {
         onPress={logOutHandler}>
         <Text style={[{ paddingBottom: 10 }, globalStyles.buttonText]}>Log Out</Text>
       </TouchableOpacity>
+
+      {/* <TouchableOpacity
+        style={[{ width: '20%', paddingTop: 25, paddingLeft: 20 }, globalStyles.supportText]}
+        onPress={() => setShowSearchBar(true)}>
+        <FontAwesome name="search" size={24} color={isLightThemeEnabled ? 'black' : 'white'} />
+      </TouchableOpacity> */}
 
       <Text style={[{ width: '20%', paddingTop: 25, paddingLeft: 10 }, globalStyles.supportText]}>
         Last pressed: {message}

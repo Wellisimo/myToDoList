@@ -8,7 +8,6 @@ import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
 const itemsList = props => {
-  const items = useSelector(state => state.items);
   const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
@@ -21,7 +20,7 @@ const itemsList = props => {
         ItemSeparatorComponent={() => (
           <View style={[{ borderBottomColor: isLightThemeEnabled ? 'black' : 'white' }, styles.listSeparator]} />
         )}
-        data={items}
+        data={props.items}
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <Text>- </Text>

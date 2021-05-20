@@ -15,7 +15,7 @@ const loginScreen = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
-  const isUserLoginValid = async (login, password) => {
+  const isUserLoginValid = async (userLogin, password) => {
     try {
       const result = await fetch(`${URL}/users.json`);
       const jsonResult = await result.json();

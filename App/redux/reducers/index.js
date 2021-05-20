@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 const itemsReducer = (items = [], action) => {
   switch (action.type) {
     case 'ADD_ITEM':
-      if (action.payload !== '') {
+      if (action.payload !== '' && !items.map(element => element.value).includes(action.payload)) {
         return [...items, { value: action.payload, done: false }];
       }
       return items;

@@ -63,7 +63,7 @@ const userInfoScreen = props => {
       <TouchableOpacity
         onPress={() => {
           props.navigation.setParams({ message: 'Image' });
-          editable ? pickImage : null;
+          editable ? pickImage() : null;
         }}>
         <Image
           style={styles.image}
@@ -72,8 +72,7 @@ const userInfoScreen = props => {
             image
               ? { uri: image }
               : {
-                  uri:
-                    'https://dt2sdf0db8zob.cloudfront.net/wp-content/uploads/2019/12/9-Best-Online-Avatars-and-How-to-Make-Your-Own-for-Free-image1-5.png',
+                  uri: 'https://dt2sdf0db8zob.cloudfront.net/wp-content/uploads/2019/12/9-Best-Online-Avatars-and-How-to-Make-Your-Own-for-Free-image1-5.png',
                 }
           }
         />
@@ -84,7 +83,7 @@ const userInfoScreen = props => {
           {name}
         </Text>
       ) : (
-        <Input value={name} textInputHandler={setName} placeholder="Name" />
+        <Input text={name} textInputHandler={setName} onFocus={props.navigation.setParams} placeholder="Name" />
       )}
       {!editable ? (
         <Text style={[styles.text, globalStyles.mainText]}>
@@ -92,7 +91,7 @@ const userInfoScreen = props => {
           {age}
         </Text>
       ) : (
-        <Input value={age} textInputHandler={setAge} placeholder="Age" />
+        <Input text={age} textInputHandler={setAge} onFocus={props.navigation.setParams} placeholder="Age" />
       )}
       <ButtonElement
         title={!editable ? 'Edit' : 'Save'}

@@ -14,7 +14,6 @@ import {
   uploadItems,
   addHistory,
   undoItems,
-  showError,
   getStyle,
 } from '../../redux/actions/index';
 
@@ -24,6 +23,10 @@ import globalStylesDark from '../../Styles/Dark';
 
 const listScreen = props => {
   const [text, setText] = useState('');
+  const [conditionalShow, setConditionalShow] = useState('All');
+  const [showItems, setShowItems] = useState([]);
+  const [enableSearch, setEnableSearch] = useState(false);
+
   const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
   const items = useSelector(state => state.items);
   const history = useSelector(state => state.history);
@@ -35,16 +38,50 @@ const listScreen = props => {
     setText(text);
   };
 
+  const toggleShow = () => {
+    if (conditionalShow === 'All') {
+      setConditionalShow('Done');
+    }
+    if (conditionalShow === 'Done') {
+      setConditionalShow('Undone');
+    }
+    if (conditionalShow === 'Undone') {
+      setConditionalShow('All');
+    }
+  };
+
+  // check for style theme
   useEffect(() => {
     dispatch(getStyle());
   }, []);
+
+  // conditional rendering of items list
+  useEffect(() => {
+    if (conditionalShow !== 'All') {
+      setShowItems(() =>
+        items.filter(element => {
+          if (
+            element.done === (conditionalShow === 'Done' ? true : false) &&
+            (enableSearch ? element.value.toLowerCase().includes(text.toLowerCase()) : true)
+          ) {
+            return true;
+          }
+        }),
+      );
+    }
+    if (conditionalShow === 'All') {
+      setShowItems(
+        enableSearch ? items.filter(element => element.value.toLowerCase().includes(text.toLowerCase())) : items,
+      );
+    }
+  }, [conditionalShow, enableSearch, items, text]);
 
   return (
     <View style={[styles.container, globalStyles.background]}>
       <Input
         text={text}
         textInputHandler={textInputHandler}
-        placeholder="type here to add item"
+        placeholder="type here to add or search item"
         onFocus={props.navigation.setParams}
       />
 
@@ -52,14 +89,10 @@ const listScreen = props => {
         <ButtonElement
           title="Add"
           onPress={() => {
-            try {
-              props.navigation.setParams({ message: 'Add' });
-              dispatch(addItem(text));
-              dispatch(addHistory(items));
-              setText('');
-            } catch (err) {
-              dispatch(showError(err.message));
-            }
+            props.navigation.setParams({ message: 'Add' });
+            dispatch(addHistory());
+            dispatch(addItem(text));
+            setText('');
           }}
         />
         <ButtonElement
@@ -67,6 +100,24 @@ const listScreen = props => {
           onPress={() => {
             props.navigation.setParams({ message: 'Undo' });
             dispatch(undoItems(history));
+          }}
+        />
+      </View>
+      <View style={styles.buttonsContainer}>
+        <ButtonElement
+          title={conditionalShow === 'All' ? 'Show done' : conditionalShow === 'Done' ? 'Show todo' : 'Show all'}
+          onPress={() => {
+            props.navigation.setParams({
+              message: conditionalShow === 'All' ? 'Show done' : conditionalShow === 'Done' ? 'Show todo' : 'Show all',
+            });
+            toggleShow();
+          }}
+        />
+        <ButtonElement
+          title={!enableSearch ? 'Enable Search' : 'Stop Search'}
+          onPress={() => {
+            props.navigation.setParams({ message: 'Search' });
+            setEnableSearch(!enableSearch);
           }}
         />
       </View>
@@ -82,8 +133,8 @@ const listScreen = props => {
           title="Load"
           onPress={() => {
             props.navigation.setParams({ message: 'Load' });
-            dispatch(loadItems());
             dispatch(addHistory());
+            dispatch(loadItems());
           }}
         />
       </View>
@@ -99,13 +150,13 @@ const listScreen = props => {
           title="Download"
           onPress={() => {
             props.navigation.setParams({ message: 'Download' });
-            dispatch(downloadItems());
             dispatch(addHistory());
+            dispatch(downloadItems());
           }}
         />
       </View>
 
-      <ItemsList onPress={props.navigation.setParams} />
+      <ItemsList onPress={props.navigation.setParams} items={showItems} />
     </View>
   );
 };

@@ -6,6 +6,7 @@ const input = props => {
     <View style={styles.textContainer}>
       <TextInput
         style={styles.textInput}
+        autoCapitalize="none"
         value={props.text}
         onChangeText={props.textInputHandler}
         placeholder={props.placeholder}
