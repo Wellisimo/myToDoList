@@ -6,21 +6,27 @@ import styles from './styles';
 
 import { showError } from '../../redux/actions/index';
 
+type RegisterScreenProps = {
+  navigation: {
+    [key: string]: (arg?: any) => void;
+  };
+}
+
 const URL = 'https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app';
 
-const registerScreen = props => {
+const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [loginProcess, setLoginProcess] = useState(false);
   const dispatch = useDispatch();
 
-  const isUserLoginTaken = async () => {
+  const isUserLoginTaken = async (): Promise<boolean> => {
     const result = await fetch(`${URL}/users.json`);
     const jsonResult = await result.json();
-    return !!Object.values(jsonResult || {}).find(element => element.login === login);
+    return !!Object.values(jsonResult || {}).find((element: any) => element.login === login);
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (): Promise<void> => {
     const userData = { login, password };
 
     if (!login || !password) {
@@ -44,7 +50,7 @@ const registerScreen = props => {
           setTimeout(() => {
             dispatch(showError(''));
             setLoginProcess(false);
-            props.navigation.navigate('Login');
+            navigation.navigate('Login');
           }, 2000);
         }
       });
@@ -79,4 +85,4 @@ const registerScreen = props => {
   );
 };
 
-export default registerScreen;
+export default RegisterScreen;

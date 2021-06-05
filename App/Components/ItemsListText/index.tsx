@@ -1,26 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, TextInput } from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
 import { ActionSheet } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { markItem, deleteItem, updateItem, addHistory } from '../../redux/actions';
+import { RootState, ItemObject } from '../../Helpers/Types';
+import Typography from '../Text';
 
-import globalStylesWhite from '../../Styles/Light';
-import globalStylesDark from '../../Styles/Dark';
+type ItemsListTextProps = {
+  item: ItemObject;
+  onPress: (arg: {message: string}) => void;
+}
 
-const itemsListText = props => {
-  const [text, setText] = useState(props.item.value);
+const ItemsListText: React.FC<ItemsListTextProps> = ({item, onPress}) => {
+  const [text, setText] = useState(item.value);
   const [editable, setEditable] = useState(false);
-  const input = useRef(null);
+  const input = useRef<TextInput>(null);
 
-  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
+  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
   const dispatch = useDispatch();
-  const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   useEffect(() => {
     // console.log(`List item ${props.item.value} rendered`);
     if (input.current && !input.current.isFocused()) {
-      setText(props.item.value);
+      setText(item.value);
     }
   });
 
@@ -29,8 +32,8 @@ const itemsListText = props => {
       ref={input}
       style={[
         styles.textInput,
-        globalStyles.mainText,
-        props.item.done ? { textDecorationLine: 'line-through', color: '#878787' } : null,
+        { color: isLightThemeEnabled ? 'black' : 'white' },
+        item.done ? { textDecorationLine: 'line-through', color: '#878787' } : null,
       ]}
       value={text}
       editable={editable}
@@ -39,59 +42,59 @@ const itemsListText = props => {
       }}
       onSubmitEditing={() => {
         dispatch(addHistory());
-        dispatch(updateItem(props.item.value, text));
+        dispatch(updateItem(item.value, text));
       }}
       onChangeText={setText}
-      onLayout={() => input.current.focus()}
+      onLayout={() => input.current && input.current.focus()}
     />
   ) : (
-    <Text
-      style={[
-        styles.listText,
-        globalStyles.mainText,
-        props.item.done ? { textDecorationLine: 'line-through', color: '#878787' } : null,
-      ]}
+    <Typography
+      color={isLightThemeEnabled ? 'black' : 'white'}
+      type={'h4'}
+      style={[styles.listText, item.done ? { textDecorationLine: 'line-through', color: '#878787' } : null]}
       onPress={() => {
-        props.onPress({ message: props.item.value });
+        onPress({ message: item.value });
         setEditable(true);
       }}
       onLongPress={() =>
         ActionSheet.show(
           {
-            options: [`mark as ${props.item.done ? 'undone' : 'done'}`, 'delete', 'Cancle'],
+            options: [`mark as ${item.done ? 'undone' : 'done'}`, 'delete', 'Cancel'],
             cancelButtonIndex: 2,
-            title: `I want item: '${props.item.value}' to:`,
+            title: `I want item: '${item.value}' to:`,
           },
           buttonIndex => {
             switch (buttonIndex) {
               case 0:
                 dispatch(addHistory());
-                dispatch(markItem(props.item.value));
+                dispatch(markItem(item.value));
                 break;
               case 1:
                 dispatch(addHistory());
-                dispatch(deleteItem(props.item.value));
+                dispatch(deleteItem(item.value));
                 break;
             }
           },
         )
       }>
-      {props.item.value}
-    </Text>
+      {item.value}
+    </Typography>
   );
 };
 
-export default React.memo(itemsListText);
+export default React.memo(ItemsListText);
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
   },
   listText: {
-    padding: 2,
     width: '100%',
   },
   textInput: {
     width: '100%',
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'normal',
   },
 });

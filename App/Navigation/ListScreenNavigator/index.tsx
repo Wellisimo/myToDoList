@@ -2,19 +2,22 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Header from '../../Components/Header';
-import UserInfoScreen from '../../Screens/UserInfoScreen';
+import ListScreen from '../../Screens/ListScreen';
 
 const Stack = createStackNavigator();
 
-const UserInfoScreenNavigator = () => {
+type HeaderChildProps = {
+  scene?: any;
+}
+
+const ListScreenNavigator: React.FC = () => {
   return (
     <Stack.Navigator headerMode="float">
       <Stack.Screen
-        name="UserInfoScreen"
-        component={UserInfoScreen}
+        name="ListScreen"
+        component={ListScreen}
         options={{
-          title: null,
-          header: childProps => {
+          header: (childProps: HeaderChildProps) => {
             return <Header message={childProps.scene?.__memo[0]?.params?.message} />;
           },
         }}
@@ -23,4 +26,4 @@ const UserInfoScreenNavigator = () => {
   );
 };
 
-export default UserInfoScreenNavigator;
+export default ListScreenNavigator;

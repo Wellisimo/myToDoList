@@ -8,7 +8,7 @@ import RegisterScreen from '../../Screens/RegisterScreen';
 
 const Stack = createStackNavigator();
 
-export default loginHandle = () => (
+const LoginHandle: React.FC = () => (
   <Stack.Navigator
     initialRouteName="Welcome"
   >
@@ -52,7 +52,9 @@ export default loginHandle = () => (
   </Stack.Navigator>
 );
 
-const config = {
+export default LoginHandle;
+
+const config: any = {
   animation: 'spring',
   config: {
     stiffness: 1000,
@@ -66,7 +68,7 @@ const config = {
 
 const forSlide = ({
   current, next, inverted, layouts: { screen },
-}) => {
+}: any) => {
   const progress = Animated.add(
     current.progress.interpolate({
       inputRange: [0, 1],

@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector } from 'react-redux';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
 import ListScreenNavigator from '../ListScreenNavigator';
-import UserInfoScreenNavigator from '../../Navigation/UserInfoScreenNavigator';
-
+import UserInfoScreenNavigator from '../UserInfoScreenNavigator';
+import { RootState } from '../../Helpers/Types';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 import { SafeAreaView, StatusBar } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
-const bottomTab = () => {
-  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
+const bottomTab: React.FC = () => {
+  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
@@ -26,7 +26,6 @@ const bottomTab = () => {
         initialRouteName="List"
         backBehavior="none"
         tabBarOptions={{
-          showIcon: true,
           activeBackgroundColor: isLightThemeEnabled ? 'white' : 'black',
           style: globalStyles.tabBarOptions,
         }}>

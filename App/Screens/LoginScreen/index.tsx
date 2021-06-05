@@ -10,21 +10,21 @@ import { showError, login } from '../../redux/actions/index';
 
 const URL = 'https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app';
 
-const loginScreen = () => {
+const LoginScreen: React.FC = () => {
   const [userLogin, setUserLogin] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
-  const isUserLoginValid = async (userLogin, password) => {
+  const isUserLoginValid = async (userLogin: string, password: string): Promise<boolean | undefined> => {
     try {
       const result = await fetch(`${URL}/users.json`);
       const jsonResult = await result.json();
       if (jsonResult) {
         return !!Object.values(jsonResult).find(
-          element => element.login === userLogin && element.password === password,
+          (element: any) => element.login === userLogin && element.password === password,
         );
       }
-      throw new UserNotFound('please register any user first');
+      throw new (UserNotFound('please register any user first') as any);
     } catch (err) {
       dispatch(showError(`Error ${err.name}: ${err.message}`));
     }
@@ -76,4 +76,4 @@ const loginScreen = () => {
   );
 };
 
-export default loginScreen;
+export default LoginScreen;

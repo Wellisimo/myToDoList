@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { RootState } from '../../Helpers/Types';
 import ButtonElement from '../../Components/ButtonElement';
 import ItemsList from '../../Components/ItemsList';
 import Input from '../../Components/Input';
@@ -21,20 +22,26 @@ import styles from './styles';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
-const listScreen = props => {
+type ListScreenProps = {
+  navigation: {
+    [key: string]: (arg?: any) => void;
+  };
+}
+
+const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
   const [text, setText] = useState('');
   const [conditionalShow, setConditionalShow] = useState('All');
   const [showItems, setShowItems] = useState([]);
   const [enableSearch, setEnableSearch] = useState(false);
 
-  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
-  const items = useSelector(state => state.items);
-  const history = useSelector(state => state.history);
+  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
+  const items = useSelector(({items}: RootState) => items);
+  const history = useSelector(({history}: RootState) => history);
 
   const dispatch = useDispatch();
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
-  const textInputHandler = text => {
+  const textInputHandler = (text: string) => {
     setText(text);
   };
 
@@ -58,8 +65,8 @@ const listScreen = props => {
   // conditional rendering of items list
   useEffect(() => {
     if (conditionalShow !== 'All') {
-      setShowItems(() =>
-        items.filter(element => {
+      setShowItems((): any =>
+        items?.filter(element => {
           if (
             element.done === (conditionalShow === 'Done' ? true : false) &&
             (enableSearch ? element.value.toLowerCase().includes(text.toLowerCase()) : true)
@@ -70,8 +77,8 @@ const listScreen = props => {
       );
     }
     if (conditionalShow === 'All') {
-      setShowItems(
-        enableSearch ? items.filter(element => element.value.toLowerCase().includes(text.toLowerCase())) : items,
+      setShowItems((): any => 
+        enableSearch ? items?.filter(element => element.value.toLowerCase().includes(text.toLowerCase())) : items,
       );
     }
   }, [conditionalShow, enableSearch, items, text]);
@@ -82,14 +89,14 @@ const listScreen = props => {
         text={text}
         textInputHandler={textInputHandler}
         placeholder="type here to add or search item"
-        onFocus={props.navigation.setParams}
+        onFocus={navigation.setParams}
       />
 
       <View style={styles.buttonsContainer}>
         <ButtonElement
           title="Add"
           onPress={() => {
-            props.navigation.setParams({ message: 'Add' });
+            navigation.setParams({ message: 'Add' });
             dispatch(addHistory());
             dispatch(addItem(text));
             setText('');
@@ -98,7 +105,7 @@ const listScreen = props => {
         <ButtonElement
           title="Undo"
           onPress={() => {
-            props.navigation.setParams({ message: 'Undo' });
+            navigation.setParams({ message: 'Undo' });
             dispatch(undoItems(history));
           }}
         />
@@ -107,7 +114,7 @@ const listScreen = props => {
         <ButtonElement
           title={conditionalShow === 'All' ? 'Show done' : conditionalShow === 'Done' ? 'Show todo' : 'Show all'}
           onPress={() => {
-            props.navigation.setParams({
+            navigation.setParams({
               message: conditionalShow === 'All' ? 'Show done' : conditionalShow === 'Done' ? 'Show todo' : 'Show all',
             });
             toggleShow();
@@ -116,8 +123,9 @@ const listScreen = props => {
         <ButtonElement
           title={!enableSearch ? 'Enable Search' : 'Stop Search'}
           onPress={() => {
-            props.navigation.setParams({ message: 'Search' });
+            navigation.setParams({ message: 'Search' });
             setEnableSearch(!enableSearch);
+            enableSearch ? setText('') : null;
           }}
         />
       </View>
@@ -125,14 +133,14 @@ const listScreen = props => {
         <ButtonElement
           title="Save"
           onPress={() => {
-            props.navigation.setParams({ message: 'Save' });
+            navigation.setParams({ message: 'Save' });
             dispatch(saveItems(items));
           }}
         />
         <ButtonElement
           title="Load"
           onPress={() => {
-            props.navigation.setParams({ message: 'Load' });
+            navigation.setParams({ message: 'Load' });
             dispatch(addHistory());
             dispatch(loadItems());
           }}
@@ -142,23 +150,23 @@ const listScreen = props => {
         <ButtonElement
           title="Upload"
           onPress={() => {
-            props.navigation.setParams({ message: 'Upload' });
+            navigation.setParams({ message: 'Upload' });
             dispatch(uploadItems(items));
           }}
         />
         <ButtonElement
           title="Download"
           onPress={() => {
-            props.navigation.setParams({ message: 'Download' });
+            navigation.setParams({ message: 'Download' });
             dispatch(addHistory());
             dispatch(downloadItems());
           }}
         />
       </View>
 
-      <ItemsList onPress={props.navigation.setParams} items={showItems} />
+      <ItemsList onPress={navigation.setParams} items={showItems} />
     </View>
   );
 };
 
-export default listScreen;
+export default ListScreen;
