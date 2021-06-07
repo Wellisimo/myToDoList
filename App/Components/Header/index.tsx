@@ -1,31 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from 'react-redux';
-import { Entypo, Fontisto, FontAwesome } from '@expo/vector-icons';
+import { Entypo, Fontisto } from '@expo/vector-icons';
 
 import { logout, changeStyle } from '../../redux/actions';
-
+import { RootState } from '../../Helpers/Types';
+import Typography from '../Text';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
-export default props => {
-  const [message, setMessage] = useState('press something');
-  // const [showSearchBar, setShowSearchBar] = useState(false);
+type HeaderProps = {
+  message?: string;
+}
 
-  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
+const Header: React.FC<HeaderProps> = ({message}) => {
+  const [text, setText] = useState('press something');
+
+  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
   const dispatch = useDispatch();
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
-  const logOutHandler = async () => {
+  const logOutHandler = async (): Promise<void> => {
     const jsonValue = JSON.stringify(false);
     await AsyncStorage.setItem('isLogged', jsonValue);
     dispatch(logout());
   };
 
   useEffect(() => {
-    props?.message && setMessage(props?.message);
-  }, [props?.message]);
+    message && setText(message);
+  }, [message]);
 
   return (
     <View
@@ -63,18 +67,16 @@ export default props => {
           alignItems: 'center',
         }}
         onPress={logOutHandler}>
-        <Text style={[{ paddingBottom: 10 }, globalStyles.buttonText]}>Log Out</Text>
+        <Typography type={'h4'} color={isLightThemeEnabled ? 'black' : 'white'} paddingBottom={10}>
+          Log Out
+        </Typography>
       </TouchableOpacity>
 
-      {/* <TouchableOpacity
-        style={[{ width: '20%', paddingTop: 25, paddingLeft: 20 }, globalStyles.supportText]}
-        onPress={() => setShowSearchBar(true)}>
-        <FontAwesome name="search" size={24} color={isLightThemeEnabled ? 'black' : 'white'} />
-      </TouchableOpacity> */}
-
-      <Text style={[{ width: '20%', paddingTop: 25, paddingLeft: 10 }, globalStyles.supportText]}>
-        Last pressed: {message}
-      </Text>
+      <Typography color={isLightThemeEnabled ? 'black' : 'white'} type={'h6'} paddingTop={15} style={{ width: '20%' }}>
+        Last pressed: {text}
+      </Typography>
     </View>
   );
 };
+
+export default Header;

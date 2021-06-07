@@ -3,12 +3,17 @@ import { StyleSheet, View, FlatList, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import ItemsListText from '../ItemsListText';
-
+import { RootState, Items } from '../../Helpers/Types';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
-const itemsList = props => {
-  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
+type ItemsListProps = {
+  items?: Items;
+  onPress: () => void;
+};
+
+const ItemsList: React.FC<ItemsListProps> = ({ items, onPress }) => {
+  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
@@ -20,11 +25,11 @@ const itemsList = props => {
         ItemSeparatorComponent={() => (
           <View style={[{ borderBottomColor: isLightThemeEnabled ? 'black' : 'white' }, styles.listSeparator]} />
         )}
-        data={props.items}
+        data={items}
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <Text>- </Text>
-            <ItemsListText item={item} onPress={props.onPress} />
+            <ItemsListText item={item} onPress={onPress} />
           </View>
         )}
       />
@@ -32,7 +37,7 @@ const itemsList = props => {
   );
 };
 
-export default itemsList;
+export default ItemsList;
 
 const styles = StyleSheet.create({
   listContainer: {

@@ -1,40 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
+import Typography from '../../Components/Text';
 import ButtonElement from '../../Components/ButtonElement';
 import Input from '../../Components/Input';
 
+import { showError } from '../../redux/actions/index';
+import { RootState } from '../../Helpers/Types';
 import styles from './styles';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
-const userInfoScreen = props => {
+type UserInfoScreenProps = {
+  navigation: {
+    [key: string]: (arg?: any) => boolean;
+  };
+}
+
+const UserInfoScreen: React.FC<UserInfoScreenProps> = ({navigation}) => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState('');
   const [editable, setEditable] = useState(false);
-  const isLightThemeEnabled = useSelector(state => state.isLightThemeEnabled);
+  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
+  const dispatch = useDispatch();
 
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   useEffect(() => {
-    const isFocused = props.navigation.isFocused();
+    const isFocused: boolean = navigation.isFocused();
     if (isFocused) {
       (async () => {
         if (Platform.OS !== 'web') {
           const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
           if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
+            dispatch(showError('Sorry, we need camera roll permissions to make this work!'));
           }
         }
       })();
 
       (async () => {
         const result = await AsyncStorage.getItem('userInfo');
-        const parsedResult = JSON.parse(result);
+        const parsedResult = result && JSON.parse(result);
         if (parsedResult) {
           setName(parsedResult.name);
           setAge(parsedResult.age);
@@ -59,10 +69,13 @@ const userInfoScreen = props => {
 
   return (
     <View style={[styles.container, globalStyles.background]}>
-      <Text style={[styles.text, globalStyles.mainText]}>User Info</Text>
+      <Typography 
+          type={'h3'}
+          color={isLightThemeEnabled ? 'black' : 'white'}
+      >User Info</Typography>
       <TouchableOpacity
         onPress={() => {
-          props.navigation.setParams({ message: 'Image' });
+          navigation.setParams({ message: 'Image' });
           editable ? pickImage() : null;
         }}>
         <Image
@@ -78,25 +91,29 @@ const userInfoScreen = props => {
         />
       </TouchableOpacity>
       {!editable ? (
-        <Text style={[styles.text, globalStyles.mainText]}>
-          Name:
-          {name}
-        </Text>
+        <Typography
+          type={'h4'}
+          color={isLightThemeEnabled ? 'black' : 'white'}
+        >
+          Name: {name}
+        </Typography>
       ) : (
-        <Input text={name} textInputHandler={setName} onFocus={props.navigation.setParams} placeholder="Name" />
+        <Input text={name} textInputHandler={setName} onFocus={navigation.setParams} placeholder="Name" />
       )}
       {!editable ? (
-        <Text style={[styles.text, globalStyles.mainText]}>
-          Age:
-          {age}
-        </Text>
+        <Typography 
+          type={'h4'}
+          color={isLightThemeEnabled ? 'black' : 'white'}
+        >
+          Age: {age}
+        </Typography>
       ) : (
-        <Input text={age} textInputHandler={setAge} onFocus={props.navigation.setParams} placeholder="Age" />
+        <Input text={age} textInputHandler={setAge} onFocus={navigation.setParams} placeholder="Age" />
       )}
       <ButtonElement
         title={!editable ? 'Edit' : 'Save'}
         onPress={() => {
-          props.navigation.setParams({ message: !editable ? 'Edit' : 'Save' });
+          navigation.setParams({ message: !editable ? 'Edit' : 'Save' });
           if (editable) {
             const jsonValue = JSON.stringify({
               name,
@@ -112,4 +129,4 @@ const userInfoScreen = props => {
   );
 };
 
-export default userInfoScreen;
+export default UserInfoScreen;

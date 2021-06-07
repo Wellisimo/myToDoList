@@ -4,8 +4,10 @@ import { Text, View, Modal, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { showError } from '../../redux/actions/index';
 
-const modalError = () => {
-  const error = useSelector(state => state.error);
+import { RootState } from '../../Helpers/Types';
+
+const ModalError: React.FC = () => {
+  const error = useSelector(({error}: RootState) => error);
   const dispatch = useDispatch();
 
   return error ? (
@@ -41,4 +43,4 @@ const modalError = () => {
   ) : null;
 };
 
-export default modalError;
+export default ModalError;

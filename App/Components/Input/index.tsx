@@ -1,22 +1,33 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
-const input = props => {
+interface Message {
+  message: string;
+}
+
+type InputProps = {
+  text: string;
+  textInputHandler: (message: string) => void;
+  placeholder: string;
+  onFocus: (message: Message) => void;
+}
+
+const Input: React.FC<InputProps> = ({ text, textInputHandler, placeholder, onFocus }) => {
   return (
     <View style={styles.textContainer}>
       <TextInput
         style={styles.textInput}
         autoCapitalize="none"
-        value={props.text}
-        onChangeText={props.textInputHandler}
-        placeholder={props.placeholder}
-        onFocus={() => props.onFocus({ message: 'Input' })}
+        value={text}
+        onChangeText={textInputHandler}
+        placeholder={placeholder}
+        onFocus={() => onFocus({ message: 'Input' })}
       />
     </View>
   );
 };
 
-export default input;
+export default Input;
 
 const styles = StyleSheet.create({
   textInput: {
