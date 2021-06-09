@@ -1,34 +1,38 @@
 import { StyleSheet } from 'react-native';
+import { black } from '../../Constants/Colors';
+import { white } from '../../Constants/Colors';
+import { grey } from '../../Constants/Colors';
 
 type globalStylesProps = {
   background: {
-    backgroundColor: string,
-  },
+    backgroundColor: string;
+  };
   navigationHeader: {
-    backgroundColor: string,
-  },
+    backgroundColor: string;
+  };
   buttonContainer: {
-    backgroundColor: string,
-    borderColor: string,
-  },
+    backgroundColor: string;
+    borderColor: string;
+  };
   tabBarOptions: {
-    backgroundColor: string,
-  }
-}
+    backgroundColor: string;
+  };
+};
 
 const LightStyles: globalStylesProps = StyleSheet.create({
   background: {
-    backgroundColor: 'white',
+    backgroundColor: white,
   },
   navigationHeader: {
-    backgroundColor: 'white',
+    backgroundColor: white,
+    borderBottomColor: black,
   },
   buttonContainer: {
-    backgroundColor: 'white',
-    borderColor: 'black',
+    backgroundColor: white,
+    borderColor: black,
   },
   tabBarOptions: {
-    backgroundColor: '#878787',
+    backgroundColor: grey,
   },
 });
 

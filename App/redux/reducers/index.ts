@@ -1,13 +1,19 @@
 import { combineReducers } from 'redux';
+import { Actions, Items } from '../../Helpers/Types';
 
-const itemsReducer = (items = [], action) => {
+type Action = {
+  type: Partial<Actions>;
+  payload?: any;
+};
+
+const itemsReducer = (items: Items = [], action: Action) => {
   switch (action.type) {
-    case 'ADD_ITEM':
+    case Actions.AddItem:
       if (action.payload !== '' && !items.map(element => element.value).includes(action.payload)) {
         return [...items, { value: action.payload, done: false }];
       }
       return items;
-    case 'UPDATE_ITEM':
+    case Actions.UpdateItem:
       if (action.payload.newValue !== '' && action.payload.newValue !== action.payload.oldValue) {
         const newUpdateList = items.map(element => {
           if (element.value === action.payload.oldValue) {
@@ -18,7 +24,7 @@ const itemsReducer = (items = [], action) => {
         return newUpdateList;
       }
       return items;
-    case 'MARK_ITEM':
+    case Actions.MarkItem:
       const newMarkList = items.map(element => {
         if (element.value === action.payload) {
           return { ...element, done: !element.done };
@@ -26,13 +32,13 @@ const itemsReducer = (items = [], action) => {
         return element;
       });
       return newMarkList;
-    case 'DELETE_ITEM':
+    case Actions.DeleteItem:
       return items.filter(element => element.value !== action.payload);
-    case 'LOAD_ITEMS':
+    case Actions.LoadItems:
       return action.payload;
-    case 'DOWNLOAD_ITEMS':
+    case Actions.DownloadItems:
       return action.payload;
-    case 'UNDO_ITEMS':
+    case Actions.undoUserAction:
       if (action.payload && action.payload.length) {
         return action.payload[action.payload.length - 1];
       }
@@ -42,8 +48,8 @@ const itemsReducer = (items = [], action) => {
   }
 };
 
-const historyReducer = (history = [], action) => {
-  const condition = () => {
+const historyReducer = (history = [], action: Action) => {
+  const isDataDuplicated = () => {
     if (history.length) {
       if (JSON.stringify(history[history.length - 1]) === JSON.stringify(action.payload)) {
         return false;
@@ -51,34 +57,34 @@ const historyReducer = (history = [], action) => {
     }
     return true;
   };
-  if (action.type === 'ADD_HISTORY' && condition()) {
+  if (action.type === Actions.addUserActionHistory && isDataDuplicated()) {
     return [...history, action.payload];
   }
-  if (action.type === 'UNDO_ITEMS' && history.length > 0) {
+  if (action.type === Actions.undoUserAction && history.length > 0) {
     return history.slice(0, history.length - 1);
   }
   return history;
 };
 
-const errorReducer = (error = '', action) => {
-  if (action.type === 'SHOW_ERROR') {
+const errorReducer = (error = '', action: Action) => {
+  if (action.type === Actions.ShowError) {
     return action.payload;
   }
   return error;
 };
 
-const loginReducer = (login = false, action) => {
-  if (action.type === 'LOGIN_CHECK') {
+const loginReducer = (login = false, action: Action) => {
+  if (action.type === Actions.LoginCheck) {
     return action.payload;
   }
   return login;
 };
 
-const styleReducer = (light = true, action) => {
-  if (action.type === 'STYLE_CHANGE') {
+const styleReducer = (light = true, action: Action) => {
+  if (action.type === Actions.StyleChange) {
     return action.payload;
   }
-  if (action.type === 'STYLE_GET') {
+  if (action.type === Actions.StyleGet) {
     return action.payload;
   }
   return light;

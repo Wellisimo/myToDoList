@@ -8,10 +8,8 @@ import RegisterScreen from '../../Screens/RegisterScreen';
 
 const Stack = createStackNavigator();
 
-const LoginHandle: React.FC = () => (
-  <Stack.Navigator
-    initialRouteName="Welcome"
-  >
+const LoginHandle = () => (
+  <Stack.Navigator initialRouteName="Welcome">
     <Stack.Screen
       name="Welcome"
       component={WelcomeScreen}
@@ -66,9 +64,7 @@ const config: any = {
   },
 };
 
-const forSlide = ({
-  current, next, inverted, layouts: { screen },
-}: any) => {
+const forSlide = ({ current, next, inverted, layouts: { screen } }: any) => {
   const progress = Animated.add(
     current.progress.interpolate({
       inputRange: [0, 1],
@@ -77,10 +73,10 @@ const forSlide = ({
     }),
     next
       ? next.progress.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1],
-        extrapolate: 'clamp',
-      })
+          inputRange: [0, 1],
+          outputRange: [0, 1],
+          extrapolate: 'clamp',
+        })
       : 0,
   );
 

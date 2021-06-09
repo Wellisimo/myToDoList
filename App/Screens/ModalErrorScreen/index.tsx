@@ -1,46 +1,28 @@
 import React from 'react';
-import { Text, View, Modal, TouchableOpacity } from 'react-native';
+import { View, Modal, TouchableOpacity } from 'react-native';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { showError } from '../../redux/actions/index';
 
-import { RootState } from '../../Helpers/Types';
+import Typography from '../../Components/Typography';
+import styles from './styles';
+import { useAppSelector } from '../../redux/useAppSelector';
 
-const ModalError: React.FC = () => {
-  const error = useSelector(({error}: RootState) => error);
+const ModalError = () => {
+  const error = useAppSelector(({ error }) => error);
   const dispatch = useDispatch();
 
-  return error ? (
+  if (!error) return null;
+
+  return (
     <Modal animationType="slide" transparent visible>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 10,
-        }}>
-        <TouchableOpacity
-          onPress={() => dispatch(showError(''))}
-          style={{
-            margin: 10,
-            backgroundColor: '#9cb6b8',
-            borderRadius: 20,
-            padding: 20,
-            alignItems: 'center',
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.5,
-            shadowRadius: 4,
-            elevation: 10,
-          }}>
-          <Text>{error}</Text>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={() => dispatch(showError(''))} style={styles.body}>
+          <Typography type={'h4'}>{error}</Typography>
         </TouchableOpacity>
       </View>
     </Modal>
-  ) : null;
+  );
 };
 
 export default ModalError;

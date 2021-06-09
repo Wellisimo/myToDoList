@@ -1,34 +1,38 @@
 import { StyleSheet } from 'react-native';
+import { black } from '../../Constants/Colors';
+import { white } from '../../Constants/Colors';
+import { grey } from '../../Constants/Colors';
 
 type globalStylesProps = {
   background: {
-    backgroundColor: string,
-  },
+    backgroundColor: string;
+  };
   navigationHeader: {
-    backgroundColor: string,
-  },
+    backgroundColor: string;
+  };
   buttonContainer: {
-    backgroundColor: string,
-    borderColor: string,
-  },
+    backgroundColor: string;
+    borderColor: string;
+  };
   tabBarOptions: {
-    backgroundColor: string,
-  }
-}
+    backgroundColor: string;
+  };
+};
 
 const DarkStyles: globalStylesProps = StyleSheet.create({
   background: {
-    backgroundColor: 'black',
+    backgroundColor: black,
   },
   navigationHeader: {
-    backgroundColor: 'black',
+    backgroundColor: black,
+    borderBottomColor: white,
   },
   buttonContainer: {
-    backgroundColor: 'black',
-    borderColor: 'white',
+    backgroundColor: black,
+    borderColor: white,
   },
   tabBarOptions: {
-    backgroundColor: '#878787',
+    backgroundColor: grey,
   },
 });
 

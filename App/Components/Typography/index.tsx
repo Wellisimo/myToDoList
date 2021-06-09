@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TextProps, TextStyle } from 'react-native';
+import { black } from '../../Constants/Colors';
+import { white } from '../../Constants/Colors';
 
 const styles = StyleSheet.create({
   h1: {
@@ -31,7 +33,6 @@ const styles = StyleSheet.create({
   h7: {
     fontSize: 10,
     lineHeight: 12,
-    fontWeight: 'bold',
   },
   upperCase: {
     textTransform: 'uppercase',
@@ -59,6 +60,7 @@ type MarginStyles = Partial<
 type TypographyProps = TextProps &
   MarginStyles & {
     type: keyof typeof styles;
+    darkModeEnabled?: boolean;
     color?: TextStyle['color'];
     fontWeight?: TextStyle['fontWeight'];
     upperCase?: boolean;
@@ -66,6 +68,7 @@ type TypographyProps = TextProps &
 
 const Typography: React.FC<TypographyProps> = ({
   type,
+  darkModeEnabled,
   color,
   fontWeight,
   style,
@@ -88,6 +91,7 @@ const Typography: React.FC<TypographyProps> = ({
     style={[
       styles[type],
       {
+        color: darkModeEnabled ? white : black,
         ...(color && { color }),
         ...(fontWeight && { fontWeight }),
         ...(upperCase && styles.upperCase),

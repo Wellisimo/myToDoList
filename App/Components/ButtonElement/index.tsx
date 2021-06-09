@@ -1,24 +1,23 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
 
-import { RootState } from '../../Helpers/Types';
-import Typography from '../Text';
+import { useAppSelector } from '../../redux/useAppSelector';
+import Typography from '../Typography';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 
 type ButtonProps = {
   onPress: () => void;
   title: string;
-}
+};
 
 const ButtonElement: React.FC<ButtonProps> = ({ onPress, title }) => {
-  const isLightThemeEnabled = useSelector(({ isLightThemeEnabled }: RootState) => isLightThemeEnabled);
+  const isLightThemeEnabled = useAppSelector(({ isLightThemeEnabled }) => isLightThemeEnabled);
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
     <TouchableOpacity style={[styles.buttonContainer, globalStyles.buttonContainer]} onPress={onPress}>
-      <Typography type={'h5'} color={isLightThemeEnabled ? 'black' : 'white'} fontWeight={'normal'}>
+      <Typography type={'h5'} darkModeEnabled={!isLightThemeEnabled} fontWeight={'normal'}>
         {title}
       </Typography>
     </TouchableOpacity>

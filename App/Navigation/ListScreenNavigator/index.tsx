@@ -8,9 +8,9 @@ const Stack = createStackNavigator();
 
 type HeaderChildProps = {
   scene?: any;
-}
+};
 
-const ListScreenNavigator: React.FC = () => {
+const ListScreenNavigator = () => {
   return (
     <Stack.Navigator headerMode="float">
       <Stack.Screen

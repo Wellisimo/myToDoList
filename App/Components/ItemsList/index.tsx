@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, FlatList, Text } from 'react-native';
-import { useSelector } from 'react-redux';
+import { StyleSheet, View, FlatList } from 'react-native';
 
+import { useAppSelector } from '../../redux/useAppSelector';
 import ItemsListText from '../ItemsListText';
-import { RootState, Items } from '../../Helpers/Types';
+import { Items } from '../../Helpers/Types';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
+import { black } from '../../Constants/Colors';
+import { white } from '../../Constants/Colors';
 
 type ItemsListProps = {
   items?: Items;
@@ -13,7 +15,7 @@ type ItemsListProps = {
 };
 
 const ItemsList: React.FC<ItemsListProps> = ({ items, onPress }) => {
-  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
+  const isLightThemeEnabled = useAppSelector(({ isLightThemeEnabled }) => isLightThemeEnabled);
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
@@ -23,12 +25,11 @@ const ItemsList: React.FC<ItemsListProps> = ({ items, onPress }) => {
         keyExtractor={(item, index) => index.toString()}
         style={styles.list}
         ItemSeparatorComponent={() => (
-          <View style={[{ borderBottomColor: isLightThemeEnabled ? 'black' : 'white' }, styles.listSeparator]} />
+          <View style={[{ borderBottomColor: isLightThemeEnabled ? black : white }, styles.listSeparator]} />
         )}
         data={items}
         renderItem={({ item }) => (
           <View style={styles.listItem}>
-            <Text>- </Text>
             <ItemsListText item={item} onPress={onPress} />
           </View>
         )}
@@ -59,5 +60,7 @@ const styles = StyleSheet.create({
   listSeparator: {
     width: '95%',
     borderBottomWidth: 1,
+    alignSelf: 'flex-end',
+    marginRight: '4%',
   },
 });

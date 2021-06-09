@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { View, TouchableOpacity, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 
+import Typography from '../../Components/Typography';
 import styles from './styles';
-
+import { URL } from '../../Constants/URL';
 import { UserNotFound } from '../../Errors';
 import { showError, login } from '../../redux/actions/index';
 
-const URL = 'https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app';
-
-const LoginScreen: React.FC = () => {
+const LoginScreen = () => {
   const [userLogin, setUserLogin] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
+  // imitating login check (no real back-end actions)
   const isUserLoginValid = async (userLogin: string, password: string): Promise<boolean | undefined> => {
     try {
       const result = await fetch(`${URL}/users.json`);
       const jsonResult = await result.json();
       if (jsonResult) {
+        // donwloading all aviable logins and passwords to find if entered is valid
         return !!Object.values(jsonResult).find(
           (element: any) => element.login === userLogin && element.password === password,
         );
       }
-      throw new (UserNotFound('please register any user first') as any);
+      throw new (UserNotFound('please register any user first') as any)();
     } catch (err) {
       dispatch(showError(`Error ${err.name}: ${err.message}`));
     }
@@ -53,7 +54,9 @@ const LoginScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.text, { fontSize: 20, fontWeight: '600', paddingBottom: 50 }]}>Enter your data</Text>
+      <Typography type={'h2'} paddingBottom={50} style={styles.text}>
+        Enter your data
+      </Typography>
       <TextInput
         style={styles.textInput}
         value={userLogin}
@@ -70,7 +73,9 @@ const LoginScreen: React.FC = () => {
         secureTextEntry
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.text}>Login</Text>
+        <Typography type={'h4'} style={styles.text}>
+          Login
+        </Typography>
       </TouchableOpacity>
     </View>
   );

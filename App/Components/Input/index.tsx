@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
+import { black } from '../../Constants/Colors';
+import { white } from '../../Constants/Colors';
 interface Message {
   message: string;
 }
@@ -10,7 +12,7 @@ type InputProps = {
   textInputHandler: (message: string) => void;
   placeholder: string;
   onFocus: (message: Message) => void;
-}
+};
 
 const Input: React.FC<InputProps> = ({ text, textInputHandler, placeholder, onFocus }) => {
   return (
@@ -39,11 +41,11 @@ const styles = StyleSheet.create({
   textContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: 'black',
+    borderColor: black,
     borderWidth: 1,
     borderRadius: 10,
     height: 45,
     width: '95%',
-    backgroundColor: 'white',
+    backgroundColor: white,
   },
 });

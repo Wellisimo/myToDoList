@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -9,7 +9,6 @@ export default styles = StyleSheet.create({
   text: {
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 5,
   },
   button: {
     margin: 10,
@@ -21,9 +20,13 @@ export default styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
   },
-  image: {
-    width: 200,
-    height: 200,
-    resizeMode: 'contain',
+  textInput: {
+    height: 40,
+    width: '80%',
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 15,
+    paddingLeft: 20,
+    marginVertical: 3,
   },
 });

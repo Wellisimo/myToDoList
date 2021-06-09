@@ -1,23 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { ActionSheet } from 'native-base';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../redux/useAppSelector';
 
-import { markItem, deleteItem, updateItem, addHistory } from '../../redux/actions';
-import { RootState, ItemObject } from '../../Helpers/Types';
-import Typography from '../Text';
+import { markItem, deleteItem, updateItem, addUserActionHistory } from '../../redux/actions';
+import { ItemObject } from '../../Helpers/Types';
+import Typography from '../Typography';
+import { black } from '../../Constants/Colors';
+import { white } from '../../Constants/Colors';
+import { grey } from '../../Constants/Colors';
 
 type ItemsListTextProps = {
   item: ItemObject;
-  onPress: (arg: {message: string}) => void;
-}
+  onPress: (arg: { message: string }) => void;
+};
 
-const ItemsListText: React.FC<ItemsListTextProps> = ({item, onPress}) => {
+const ItemsListText: React.FC<ItemsListTextProps> = ({ item, onPress }) => {
   const [text, setText] = useState(item.value);
   const [editable, setEditable] = useState(false);
   const input = useRef<TextInput>(null);
 
-  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
+  const isLightThemeEnabled = useAppSelector(({ isLightThemeEnabled }) => isLightThemeEnabled);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,8 +36,8 @@ const ItemsListText: React.FC<ItemsListTextProps> = ({item, onPress}) => {
       ref={input}
       style={[
         styles.textInput,
-        { color: isLightThemeEnabled ? 'black' : 'white' },
-        item.done ? { textDecorationLine: 'line-through', color: '#878787' } : null,
+        { color: isLightThemeEnabled ? black : white },
+        item.done ? { textDecorationLine: 'line-through', color: grey } : null,
       ]}
       value={text}
       editable={editable}
@@ -41,7 +45,7 @@ const ItemsListText: React.FC<ItemsListTextProps> = ({item, onPress}) => {
         setEditable(false);
       }}
       onSubmitEditing={() => {
-        dispatch(addHistory());
+        dispatch(addUserActionHistory());
         dispatch(updateItem(item.value, text));
       }}
       onChangeText={setText}
@@ -49,9 +53,9 @@ const ItemsListText: React.FC<ItemsListTextProps> = ({item, onPress}) => {
     />
   ) : (
     <Typography
-      color={isLightThemeEnabled ? 'black' : 'white'}
       type={'h4'}
-      style={[styles.listText, item.done ? { textDecorationLine: 'line-through', color: '#878787' } : null]}
+      darkModeEnabled={!isLightThemeEnabled}
+      style={[styles.listText, item.done ? { textDecorationLine: 'line-through', color: grey } : null]}
       onPress={() => {
         onPress({ message: item.value });
         setEditable(true);
@@ -66,18 +70,18 @@ const ItemsListText: React.FC<ItemsListTextProps> = ({item, onPress}) => {
           buttonIndex => {
             switch (buttonIndex) {
               case 0:
-                dispatch(addHistory());
+                dispatch(addUserActionHistory());
                 dispatch(markItem(item.value));
                 break;
               case 1:
-                dispatch(addHistory());
+                dispatch(addUserActionHistory());
                 dispatch(deleteItem(item.value));
                 break;
             }
           },
         )
       }>
-      {item.value}
+      {`- ${item.value}`}
     </Typography>
   );
 };

@@ -1,19 +1,20 @@
 import React from 'react';
+import { SafeAreaView, StatusBar } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useSelector } from 'react-redux';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
 import ListScreenNavigator from '../ListScreenNavigator';
 import UserInfoScreenNavigator from '../UserInfoScreenNavigator';
-import { RootState } from '../../Helpers/Types';
+import { useAppSelector } from '../../redux/useAppSelector';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { black } from '../../Constants/Colors';
+import { white } from '../../Constants/Colors';
 
 const Tab = createBottomTabNavigator();
 
-const bottomTab: React.FC = () => {
-  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
+const bottomTab = () => {
+  const isLightThemeEnabled = useAppSelector(({ isLightThemeEnabled }) => isLightThemeEnabled);
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
@@ -26,14 +27,14 @@ const bottomTab: React.FC = () => {
         initialRouteName="List"
         backBehavior="none"
         tabBarOptions={{
-          activeBackgroundColor: isLightThemeEnabled ? 'white' : 'black',
+          activeBackgroundColor: isLightThemeEnabled ? white : black,
           style: globalStyles.tabBarOptions,
         }}>
         <Tab.Screen
           name="ListScreenNavigator"
           component={ListScreenNavigator}
           options={{
-            tabBarIcon: () => <FontAwesome name="list-ol" size={24} color={isLightThemeEnabled ? 'black' : 'white'} />,
+            tabBarIcon: () => <FontAwesome name="list-ol" size={24} color={isLightThemeEnabled ? black : white} />,
             tabBarLabel: () => null,
           }}
         />
@@ -41,7 +42,7 @@ const bottomTab: React.FC = () => {
           name="UserInfoScreenNavigator"
           component={UserInfoScreenNavigator}
           options={{
-            tabBarIcon: () => <AntDesign name="user" size={24} color={isLightThemeEnabled ? 'black' : 'white'} />,
+            tabBarIcon: () => <AntDesign name="user" size={24} color={isLightThemeEnabled ? black : white} />,
             tabBarLabel: () => null,
           }}
         />

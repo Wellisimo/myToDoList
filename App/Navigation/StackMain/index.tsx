@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { RootState } from '../../Helpers/Types';
+import { useAppSelector } from '../../redux/useAppSelector';
 import LoginHandle from '../LoginHandle';
 import BottomTab from '../BottomTab';
 
@@ -11,8 +11,8 @@ import { checkLogin } from '../../redux/actions';
 
 const Stack = createStackNavigator();
 
-const stackMain: React.FC = () => {
-  const login = useSelector(({login}: RootState) => login);
+const stackMain = () => {
+  const login = useAppSelector(({ login }) => login);
   const dispatch = useDispatch();
   dispatch(checkLogin());
 

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { RootState } from '../../Helpers/Types';
+import { useAppSelector } from '../../redux/useAppSelector';
 import ButtonElement from '../../Components/ButtonElement';
 import ItemsList from '../../Components/ItemsList';
 import Input from '../../Components/Input';
@@ -13,30 +13,36 @@ import {
   downloadItems,
   saveItems,
   uploadItems,
-  addHistory,
-  undoItems,
+  addUserActionHistory,
+  undoUserAction,
   getStyle,
 } from '../../redux/actions/index';
 
 import styles from './styles';
 import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
+import Typography from '../../Components/Typography';
 
 type ListScreenProps = {
   navigation: {
     [key: string]: (arg?: any) => void;
   };
+};
+
+enum conditional {
+  All = 'ALL',
+  Done = 'DONE',
+  Undone = 'UNDONE',
 }
 
-const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
+const ListScreen: React.FC<ListScreenProps> = ({ navigation }) => {
   const [text, setText] = useState('');
-  const [conditionalShow, setConditionalShow] = useState('All');
-  const [showItems, setShowItems] = useState([]);
+  const [conditionalShow, setConditionalShow] = useState(conditional.All);
   const [enableSearch, setEnableSearch] = useState(false);
 
-  const isLightThemeEnabled = useSelector(({isLightThemeEnabled}: RootState) => isLightThemeEnabled);
-  const items = useSelector(({items}: RootState) => items);
-  const history = useSelector(({history}: RootState) => history);
+  const isLightThemeEnabled = useAppSelector(({ isLightThemeEnabled }) => isLightThemeEnabled);
+  const items = useAppSelector(({ items }) => items);
+  const history = useAppSelector(({ history }) => history);
 
   const dispatch = useDispatch();
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
@@ -46,14 +52,14 @@ const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
   };
 
   const toggleShow = () => {
-    if (conditionalShow === 'All') {
-      setConditionalShow('Done');
+    if (conditionalShow === conditional.All) {
+      setConditionalShow(conditional.Done);
     }
-    if (conditionalShow === 'Done') {
-      setConditionalShow('Undone');
+    if (conditionalShow === conditional.Done) {
+      setConditionalShow(conditional.Undone);
     }
-    if (conditionalShow === 'Undone') {
-      setConditionalShow('All');
+    if (conditionalShow === conditional.Undone) {
+      setConditionalShow(conditional.All);
     }
   };
 
@@ -63,24 +69,22 @@ const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
   }, []);
 
   // conditional rendering of items list
-  useEffect(() => {
-    if (conditionalShow !== 'All') {
-      setShowItems((): any =>
-        items?.filter(element => {
-          if (
-            element.done === (conditionalShow === 'Done' ? true : false) &&
-            (enableSearch ? element.value.toLowerCase().includes(text.toLowerCase()) : true)
-          ) {
-            return true;
-          }
-        }),
-      );
+  const showItems = useMemo(() => {
+    // toggle between done OR undone items
+    if (conditionalShow !== conditional.All) {
+      // filtering done OR undone items
+      return items?.filter(element => {
+        if (
+          element.done === (conditionalShow === conditional.Done) &&
+          (enableSearch ? element.value.toLowerCase().includes(text.toLowerCase()) : true)
+        ) {
+          return true;
+        }
+      });
     }
-    if (conditionalShow === 'All') {
-      setShowItems((): any => 
-        enableSearch ? items?.filter(element => element.value.toLowerCase().includes(text.toLowerCase())) : items,
-      );
-    }
+
+    // filtering done AND undone items together
+    return enableSearch ? items?.filter(element => element.value.toLowerCase().includes(text.toLowerCase())) : items;
   }, [conditionalShow, enableSearch, items, text]);
 
   return (
@@ -97,7 +101,7 @@ const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
           title="Add"
           onPress={() => {
             navigation.setParams({ message: 'Add' });
-            dispatch(addHistory());
+            dispatch(addUserActionHistory());
             dispatch(addItem(text));
             setText('');
           }}
@@ -106,16 +110,27 @@ const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
           title="Undo"
           onPress={() => {
             navigation.setParams({ message: 'Undo' });
-            dispatch(undoItems(history));
+            history && dispatch(undoUserAction(history));
           }}
         />
       </View>
       <View style={styles.buttonsContainer}>
         <ButtonElement
-          title={conditionalShow === 'All' ? 'Show done' : conditionalShow === 'Done' ? 'Show todo' : 'Show all'}
+          title={
+            conditionalShow === conditional.All
+              ? 'Show done'
+              : conditionalShow === conditional.Done
+              ? 'Show todo'
+              : 'Show all'
+          }
           onPress={() => {
             navigation.setParams({
-              message: conditionalShow === 'All' ? 'Show done' : conditionalShow === 'Done' ? 'Show todo' : 'Show all',
+              message:
+                conditionalShow === conditional.All
+                  ? 'Show done'
+                  : conditionalShow === conditional.Done
+                  ? 'Show todo'
+                  : 'Show all',
             });
             toggleShow();
           }}
@@ -134,14 +149,14 @@ const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
           title="Save"
           onPress={() => {
             navigation.setParams({ message: 'Save' });
-            dispatch(saveItems(items));
+            items && dispatch(saveItems(items));
           }}
         />
         <ButtonElement
           title="Load"
           onPress={() => {
             navigation.setParams({ message: 'Load' });
-            dispatch(addHistory());
+            dispatch(addUserActionHistory());
             dispatch(loadItems());
           }}
         />
@@ -151,18 +166,22 @@ const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
           title="Upload"
           onPress={() => {
             navigation.setParams({ message: 'Upload' });
-            dispatch(uploadItems(items));
+            items && dispatch(uploadItems(items));
           }}
         />
         <ButtonElement
           title="Download"
           onPress={() => {
             navigation.setParams({ message: 'Download' });
-            dispatch(addHistory());
+            dispatch(addUserActionHistory());
             dispatch(downloadItems());
           }}
         />
       </View>
+
+      <Typography type={'h7'} darkModeEnabled={!isLightThemeEnabled} marginTop={10}>
+        {showItems && showItems.length > 0 ? 'Press on item to edit; Press and hold item to get more actions' : null}
+      </Typography>
 
       <ItemsList onPress={navigation.setParams} items={showItems} />
     </View>

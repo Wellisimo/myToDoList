@@ -1,32 +1,32 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { useDispatch } from 'react-redux';
 
+import Typography from '../../Components/Typography';
 import styles from './styles';
-
+import { URL } from '../../Constants/URL';
 import { showError } from '../../redux/actions/index';
 
 type RegisterScreenProps = {
   navigation: {
     [key: string]: (arg?: any) => void;
   };
-}
+};
 
-const URL = 'https://mytodolist-d5e1a-default-rtdb.europe-west1.firebasedatabase.app';
-
-const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
+const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
-  const [loginProcess, setLoginProcess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const isUserLoginTaken = async (): Promise<boolean> => {
-    const result = await fetch(`${URL}/users.json`);
-    const jsonResult = await result.json();
-    return !!Object.values(jsonResult || {}).find((element: any) => element.login === login);
+  // get all user logins to check if new one is taken
+  const isUserLoginTaken = async () => {
+    const allUserLogins = await fetch(`${URL}/users.json`);
+    const jsonAllUserLogins = await allUserLogins.json();
+    return !!Object.values(jsonAllUserLogins || {}).find((element: any) => element.login === login);
   };
 
-  const handleRegister = async (): Promise<void> => {
+  const handleRegister = async () => {
     const userData = { login, password };
 
     if (!login || !password) {
@@ -38,31 +38,34 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
     if (loginTaken) {
       dispatch(showError('Login is already taken'));
     } else {
-      setLoginProcess(true);
-      fetch(`${URL}/users.json`, {
+      setLoading(true);
+      const registerNewUser = await fetch(`${URL}/users.json`, {
         method: 'POST',
         body: JSON.stringify(userData),
-      }).then(response => {
-        if (response.ok) {
-          setLogin('');
-          setPassword('');
-          dispatch(showError('Registration successful! Redirecting to login menu'));
-          setTimeout(() => {
-            dispatch(showError(''));
-            setLoginProcess(false);
-            navigation.navigate('Login');
-          }, 2000);
-        }
       });
+
+      // clear fields and redirect if register is successfull
+      if (registerNewUser.ok) {
+        setLogin('');
+        setPassword('');
+        dispatch(showError('Registration successful! Redirecting to login menu'));
+
+        // imitate bad connection to check ActivityIndicator
+        setTimeout(() => {
+          dispatch(showError(''));
+          setLoading(false);
+          navigation.navigate('Login');
+        }, 1500);
+      }
     }
   };
 
   return (
     <View style={styles.container}>
-      {loginProcess ? (
-        <ActivityIndicator style={{ position: 'absolute', top: '25%' }} size="large" color="black" />
-      ) : null}
-      <Text style={[styles.text, { fontSize: 20, fontWeight: '600', paddingBottom: 50 }]}>Chose your data</Text>
+      {loading && <ActivityIndicator style={{ position: 'absolute', top: '25%' }} size="large" color="black" />}
+      <Typography type={'h2'} paddingBottom={50} style={styles.text}>
+        Chose your data
+      </Typography>
       <TextInput
         style={styles.textInput}
         value={login}
@@ -79,7 +82,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({navigation}) => {
         secureTextEntry
       />
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.text}>Register</Text>
+        <Typography type={'h4'} style={styles.text}>
+          Register
+        </Typography>
       </TouchableOpacity>
     </View>
   );
