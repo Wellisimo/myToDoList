@@ -44,7 +44,7 @@ const ListScreen: React.FC<ListScreenProps> = ({navigation}) => {
   const textInputHandler = (text: string) => {
     setText(text);
   };
-
+  console.log('test');
   const toggleShow = () => {
     if (conditionalShow === 'All') {
       setConditionalShow('Done');
