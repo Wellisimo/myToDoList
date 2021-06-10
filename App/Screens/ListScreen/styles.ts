@@ -14,10 +14,18 @@ export default StyleSheet.create({
     alignSelf: 'flex-start',
     padding: 10,
   },
-  buttonsContainer: {
+  row: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
+  iconContainer: {
+    height: 45,
+    width: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 10,
+  }
 });

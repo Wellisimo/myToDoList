@@ -11,6 +11,7 @@ import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 import { black } from '../../Constants/Colors';
 import { white } from '../../Constants/Colors';
+import SafePadding from '../../Helpers/ScreenDimensions';
 
 type HeaderProps = {
   message?: string;
@@ -49,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ message }) => {
         </Typography>
       </TouchableOpacity>
 
-      <Typography type={'h6'} darkModeEnabled={!isLightThemeEnabled} paddingTop={15} style={styles.right}>
+      <Typography type={'h6'} darkModeEnabled={!isLightThemeEnabled} paddingTop={15} style={styles.right} numberOfLines={3}>
         Last pressed: {text}
       </Typography>
     </View>
@@ -64,6 +65,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     borderBottomWidth: 1,
+    paddingTop: SafePadding,
   },
   left: {
     width: '20%',

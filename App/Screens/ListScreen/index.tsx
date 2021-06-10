@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { Entypo } from '@expo/vector-icons';
 
 import { useAppSelector } from '../../redux/useAppSelector';
 import ButtonElement from '../../Components/ButtonElement';
 import ItemsList from '../../Components/ItemsList';
 import Input from '../../Components/Input';
+import { black } from '../../Constants/Colors';
+import { white } from '../../Constants/Colors';
 
 import {
   addItem,
@@ -13,6 +16,7 @@ import {
   downloadItems,
   saveItems,
   uploadItems,
+  clearItems,
   addUserActionHistory,
   undoUserAction,
   getStyle,
@@ -38,7 +42,6 @@ enum conditional {
 const ListScreen: React.FC<ListScreenProps> = ({ navigation }) => {
   const [text, setText] = useState('');
   const [conditionalShow, setConditionalShow] = useState(conditional.All);
-  const [enableSearch, setEnableSearch] = useState(false);
 
   const isLightThemeEnabled = useAppSelector(({ isLightThemeEnabled }) => isLightThemeEnabled);
   const items = useAppSelector(({ items }) => items);
@@ -76,7 +79,7 @@ const ListScreen: React.FC<ListScreenProps> = ({ navigation }) => {
       return items?.filter(element => {
         if (
           element.done === (conditionalShow === conditional.Done) &&
-          (enableSearch ? element.value.toLowerCase().includes(text.toLowerCase()) : true)
+          element.value.toLowerCase().includes(text.toLowerCase())
         ) {
           return true;
         }
@@ -84,19 +87,26 @@ const ListScreen: React.FC<ListScreenProps> = ({ navigation }) => {
     }
 
     // filtering done AND undone items together
-    return enableSearch ? items?.filter(element => element.value.toLowerCase().includes(text.toLowerCase())) : items;
-  }, [conditionalShow, enableSearch, items, text]);
+    return items?.filter(element => element.value.toLowerCase().includes(text.toLowerCase()));
+  }, [conditionalShow, items, text]);
 
   return (
     <View style={[styles.container, globalStyles.background]}>
-      <Input
-        text={text}
-        textInputHandler={textInputHandler}
-        placeholder="type here to add or search item"
-        onFocus={navigation.setParams}
-      />
+      <View style={styles.row}>
+        <Input
+          text={text}
+          textInputHandler={textInputHandler}
+          placeholder="type here to add or search item"
+          onFocus={navigation.setParams}
+        />
+        {text ?
+          <TouchableOpacity style={styles.iconContainer} onPress={() => setText('')}>
+            <Entypo name="cross" size={24} color={black} />
+          </TouchableOpacity>
+          : null}
+      </View>
 
-      <View style={styles.buttonsContainer}>
+      <View style={styles.row}>
         <ButtonElement
           title="Add"
           onPress={() => {
@@ -114,46 +124,46 @@ const ListScreen: React.FC<ListScreenProps> = ({ navigation }) => {
           }}
         />
       </View>
-      <View style={styles.buttonsContainer}>
+      <View style={styles.row}>
         <ButtonElement
           title={
             conditionalShow === conditional.All
-              ? 'Show done'
+              ? 'Filter: all'
               : conditionalShow === conditional.Done
-              ? 'Show todo'
-              : 'Show all'
+                ? 'Filter: done'
+                : 'Filter: todo'
           }
           onPress={() => {
             navigation.setParams({
               message:
                 conditionalShow === conditional.All
-                  ? 'Show done'
+                  ? 'Filter: all'
                   : conditionalShow === conditional.Done
-                  ? 'Show todo'
-                  : 'Show all',
+                    ? 'Filter: done'
+                    : 'Filter: todo',
             });
             toggleShow();
           }}
         />
         <ButtonElement
-          title={!enableSearch ? 'Enable Search' : 'Stop Search'}
+          title={'Clear All'}
           onPress={() => {
-            navigation.setParams({ message: 'Search' });
-            setEnableSearch(!enableSearch);
-            enableSearch ? setText('') : null;
+            navigation.setParams({ message: 'Clear All' });
+            dispatch(addUserActionHistory());
+            dispatch(clearItems());
           }}
         />
       </View>
-      <View style={styles.buttonsContainer}>
+      <View style={styles.row}>
         <ButtonElement
-          title="Save"
+          title="Save (local)"
           onPress={() => {
             navigation.setParams({ message: 'Save' });
             items && dispatch(saveItems(items));
           }}
         />
         <ButtonElement
-          title="Load"
+          title="Load (local)"
           onPress={() => {
             navigation.setParams({ message: 'Load' });
             dispatch(addUserActionHistory());
@@ -161,7 +171,7 @@ const ListScreen: React.FC<ListScreenProps> = ({ navigation }) => {
           }}
         />
       </View>
-      <View style={styles.buttonsContainer}>
+      <View style={styles.row}>
         <ButtonElement
           title="Upload"
           onPress={() => {

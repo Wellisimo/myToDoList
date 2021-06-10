@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 
@@ -10,6 +10,7 @@ import globalStylesWhite from '../../Styles/Light';
 import globalStylesDark from '../../Styles/Dark';
 import { black } from '../../Constants/Colors';
 import { white } from '../../Constants/Colors';
+import SafePadding from '../../Helpers/ScreenDimensions';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +19,7 @@ const bottomTab = () => {
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <StatusBar
         barStyle={isLightThemeEnabled ? 'dark-content' : 'light-content'}
         backgroundColor={globalStyles.background.backgroundColor}
@@ -28,7 +29,10 @@ const bottomTab = () => {
         backBehavior="none"
         tabBarOptions={{
           activeBackgroundColor: isLightThemeEnabled ? white : black,
-          style: globalStyles.tabBarOptions,
+          style: [globalStyles.tabBarOptions, { height: 30 + SafePadding }],
+          safeAreaInsets: {
+            bottom: 0,
+          },
         }}>
         <Tab.Screen
           name="ListScreenNavigator"
@@ -47,7 +51,7 @@ const bottomTab = () => {
           }}
         />
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 };
 

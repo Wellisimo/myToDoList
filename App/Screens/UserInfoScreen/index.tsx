@@ -37,7 +37,7 @@ const UserInfoScreen: React.FC<UserInfoScreenProps> = ({ navigation }) => {
   const globalStyles = isLightThemeEnabled ? globalStylesWhite : globalStylesDark;
 
   useEffect(() => {
-    // granting permission to chose image when screen active
+    // granting permission to chose image, when screen active
     const isFocused: boolean = navigation.isFocused();
     if (isFocused) {
       (async () => {
@@ -93,8 +93,8 @@ const UserInfoScreen: React.FC<UserInfoScreenProps> = ({ navigation }) => {
             image
               ? { uri: image }
               : {
-                  uri: Avatar,
-                }
+                uri: Avatar,
+              }
           }
         />
       </TouchableOpacity>

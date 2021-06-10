@@ -19,6 +19,9 @@ const Input: React.FC<InputProps> = ({ text, textInputHandler, placeholder, onFo
     <View style={styles.textContainer}>
       <TextInput
         style={styles.textInput}
+        textAlignVertical={'top'}
+        multiline={true}
+        numberOfLines={3}
         autoCapitalize="none"
         value={text}
         onChangeText={textInputHandler}
@@ -34,9 +37,10 @@ export default Input;
 const styles = StyleSheet.create({
   textInput: {
     flex: 1,
-    width: '100%',
+    width: '95%',
     height: '100%',
     paddingLeft: 5,
+    paddingRight: 20,
   },
   textContainer: {
     justifyContent: 'center',

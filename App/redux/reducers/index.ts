@@ -38,7 +38,9 @@ const itemsReducer = (items: Items = [], action: Action) => {
       return action.payload;
     case Actions.DownloadItems:
       return action.payload;
-    case Actions.undoUserAction:
+    case Actions.ClearItems:
+      return []
+    case Actions.UndoUserAction:
       if (action.payload && action.payload.length) {
         return action.payload[action.payload.length - 1];
       }
@@ -57,10 +59,10 @@ const historyReducer = (history = [], action: Action) => {
     }
     return true;
   };
-  if (action.type === Actions.addUserActionHistory && isDataDuplicated()) {
+  if (action.type === Actions.AddUserActionHistory && isDataDuplicated()) {
     return [...history, action.payload];
   }
-  if (action.type === Actions.undoUserAction && history.length > 0) {
+  if (action.type === Actions.UndoUserAction && history.length > 0) {
     return history.slice(0, history.length - 1);
   }
   return history;

@@ -55,6 +55,7 @@ const ItemsListText: React.FC<ItemsListTextProps> = ({ item, onPress }) => {
     <Typography
       type={'h4'}
       darkModeEnabled={!isLightThemeEnabled}
+      numberOfLines={1}
       style={[styles.listText, item.done ? { textDecorationLine: 'line-through', color: grey } : null]}
       onPress={() => {
         onPress({ message: item.value });
